@@ -1,19 +1,41 @@
 import React, { useState, useEffect } from "react";
 import SimpleStorageContract from "./contracts/SimpleStorage.json";
 import Web3 from "web3";
-import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
 
-import Navbar from "react-bootstrap/Navbar";
-import Nav from "react-bootstrap/Nav";
-import Spinner from "react-bootstrap/Spinner";
-import Button from "react-bootstrap/Button";
+import { makeStyles } from "@material-ui/core/styles";
+import AppBar from "@material-ui/core/AppBar";
+import Toolbar from "@material-ui/core/Toolbar";
+import Typography from "@material-ui/core/Typography";
+import Button from "@material-ui/core/Button";
+import Box from "@material-ui/core/Box";
+
+const useStyles = makeStyles((theme) => ({
+  root: {
+    flexGrow: 1,
+  },
+  title: {
+    flexGrow: 1,
+  },
+  addressButton: {
+    background: "linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)",
+    color: "white",
+  },
+  addressText: {
+    width: "100px",
+    overflow: "hidden",
+    whiteSpace: "nowrap",
+    textOverflow: "ellipsis",
+  },
+}));
 
 const App = () => {
   const [account, setAccount] = useState(null);
   const [contract, setContract] = useState(null);
   const [invalidNetwork, setInvalidNetWork] = useState(false);
   const [loading, setLoading] = useState(true);
+
+  const classes = useStyles();
 
   useEffect(() => {
     if (!window.web3) {
@@ -42,7 +64,7 @@ const App = () => {
 
     // Check correct network
     const networkId = await web3.eth.net.getId();
-    if (networkId != 5777) {
+    if (networkId !== 5777) {
       setInvalidNetWork(true);
       setLoading(false);
     } else {
@@ -56,34 +78,25 @@ const App = () => {
     }
   };
   if (loading) {
-    return (
-      <div className="spinner">
-        <Spinner animation="border" role="status" variant="info">
-          <span className="sr-only">Loading...</span>
-        </Spinner>
-      </div>
-    );
+    return <div>loading</div>;
   }
   if (invalidNetwork) {
     return <div>Not using metamask with test network grr</div>;
   }
 
   return (
-    <>
-      <Navbar bg="light" expand="sm" sticky="top">
-        <Navbar.Brand>blockBeats</Navbar.Brand>
-        <Navbar.Toggle />
-        <Navbar.Collapse id="basic-navbar-nav">
-          <Nav className="mr-auto">
-            <Nav.Link>Home</Nav.Link>
-            <Nav.Link>Link</Nav.Link>
-          </Nav>
-          <Button variant="outline-info" className="account-header">
-            Account: {account}
+    <Box className={classes.root}>
+      <AppBar position="sticky" color="inherit">
+        <Toolbar>
+          <Typography variant="h6" className={classes.title}>
+            BlockBeats
+          </Typography>
+          <Button className={classes.addressButton}>
+            <Box class={classes.addressText}>{account}</Box>
           </Button>
-        </Navbar.Collapse>
-      </Navbar>
-    </>
+        </Toolbar>
+      </AppBar>
+    </Box>
   );
 };
 
