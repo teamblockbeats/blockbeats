@@ -1,0 +1,12 @@
+.account-header {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  width: 200px;
+}
+
+.spinner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
