@@ -5,6 +5,8 @@ Firstly update **node dependencies** and **build** the project to compile the st
 * `npm install`
 * `npm run build`
 
+*Note that if you're only testing UI/react changes, you can simply leave npms test server running rather than having to build and restart django to see each UI change. This is done with:* `npm start`
+
 ## Django
 ### First time set up
 The django is run through a python `virtual environment`.
