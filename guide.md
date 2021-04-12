@@ -19,7 +19,7 @@ To run server first enter the virtualenv:
 If you have just pulled a new version of the project, there might be new python dependencies to install: `pip install -r requirements.txt`
 
 After you've built the node static, the local server can be ran:
-* `cd bbDjango`
+* `cd server`
 * `python manage.py runserver`
 
 **??TODO: database migration steps??**
