@@ -37,3 +37,14 @@ truffle is used to compile smart contracts and run a local simulated ETH network
 this will return some account addresses and private keys, these can be imported into your metamask wallet if you need some simulated ETH for contract interactions.
 
 **??TODO: deploying contracts??**
+
+
+# AWS Serverless Deployment
+Whilst the site doesn't have a need for a database (or django entirely), we can deploy to AWS - [available here](http://blockbeats.s3-website-ap-southeast-2.amazonaws.com/).
+
+* Firstly install AWS CLI - [guide](https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html).
+* run `aws configure`
+  * enter your access ID and key (message George if you need one)
+  * ensure region name is `ap-southeast-2`
+  * other settings leave blank
+* when you wish to deploy, in the client directory, run `npm run deploy`
