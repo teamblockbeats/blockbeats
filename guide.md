@@ -36,6 +36,14 @@ truffle is used to compile smart contracts and run a local simulated ETH network
 
 this will return some account addresses and private keys, these can be imported into your metamask wallet if you need some simulated ETH for contract interactions.
 
+### Configure your metamask
+Until we deploy on a real network, metamask can be configured to connect to your truffle network (required to view the site). 
+
+* Click Custom RPC in your metamask networks
+  * The RPC URL should be `http://localhost:8545`
+  * The token ID should be 1337
+  * Network name whatever you choose
+
 **??TODO: deploying contracts??**
 
 
