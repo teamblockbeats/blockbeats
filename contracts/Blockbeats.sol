@@ -1,6 +1,9 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.0;
 
+// ideally import with the below line, but i couldn't get it to work
+// import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
+
 import "./openzepplin/token/ERC721/ERC721.sol";
 
 contract Blockbeats is ERC721 {
