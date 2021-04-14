@@ -7,22 +7,7 @@ Firstly update **node dependencies** and **build** the project to compile the st
 
 *Note that if you're only testing UI/react changes, you can simply leave npms test server running rather than having to build and restart django to see each UI change. This is done with:* `npm start`
 
-## Django
-### First time set up
-The django is run through a python `virtual environment`.
-
-* Firstly install `virtualenv`: (`pip install virtualenv`)
-* Create your virtualenv called "venv" from the base directory: `virtualenv venv`
-
-### Running the server
-To run server first enter the virtualenv: 
-* on mac/unix: `source venv/bin/activate`
-
-If you have just pulled a new version of the project, there might be new python dependencies to install: `pip install -r requirements.txt`
-
-After you've built the node static, the local server can be ran:
-* `cd server`
-* `python manage.py runserver`
+**UPDATE: since we aren't going to be using django, atleast for now, just use above step ^**
 
 **??TODO: database migration steps??**
 
@@ -60,6 +45,25 @@ A great way to test a truffle deployed contract is to use remix.ethereum.org.
 * A deployed contract should appear in the list below, expand this contract item
 * You SHOULD be able to interact with your deployed contract using this interactive interface. 
   * To interact, you probably will need some ETH (see **configure your metamask** ^)
+
+
+## Django (Irrelevant for time being)
+### First time set up
+The django is run through a python `virtual environment`.
+
+* Firstly install `virtualenv`: (`pip install virtualenv`)
+* Create your virtualenv called "venv" from the base directory: `virtualenv venv`
+
+### Running the server
+To run server first enter the virtualenv: 
+* on mac/unix: `source venv/bin/activate`
+
+If you have just pulled a new version of the project, there might be new python dependencies to install: `pip install -r requirements.txt`
+
+After you've built the node static, the local server can be ran:
+* `cd server`
+* `python manage.py runserver`
+
 
 # AWS Serverless Deployment
 Whilst the site doesn't have a need for a database (or django entirely), we can deploy to AWS - [available here](http://blockbeats.s3-website-ap-southeast-2.amazonaws.com/).
