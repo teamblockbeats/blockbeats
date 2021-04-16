@@ -142,7 +142,7 @@ const ContractPlayground = () => {
                   variant="contained"
                   onClick={handleViewListings}
                   color="primary"
-                >
+                  style={{ color: "white" }}>
                   View Listings
                 </Button>
               </Paper>
@@ -158,7 +158,7 @@ const ContractPlayground = () => {
                   variant="contained"
                   onClick={handleCreateListing}
                   color="primary"
-                >
+                  style={{ color: "white" }}>
                   Create Listing
                 </Button>
               </Paper>
