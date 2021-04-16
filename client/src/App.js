@@ -12,6 +12,7 @@ import Box from "@material-ui/core/Box";
 import ContractPlayground from "./components/ContractPlayground";
 import LibraryMusicIcon from "@material-ui/icons/LibraryMusic";
 import AccountCircleIcon from "@material-ui/icons/AccountCircle";
+import Profile from "./components/Profile";
 import { Switch, Route, Link, NavLink } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
@@ -41,6 +42,7 @@ const useStyles = makeStyles((theme) => ({
 
 const App = () => {
   const [account, setAccount] = useState(null);
+  const [web3, setWeb3] = useState(null);
   const [contract, setContract] = useState(null);
   const [invalidNetwork, setInvalidNetWork] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -67,7 +69,7 @@ const App = () => {
 
   const loadBlockChainData = async () => {
     const web3 = window.web3;
-
+    setWeb3(web3);
     // Use web3 to get the user's accounts.
     const accounts = await web3.eth.getAccounts();
     setAccount(accounts[0]);
@@ -105,13 +107,20 @@ const App = () => {
     <Box className={classes.root}>
       <AppBar position="sticky" color="inherit">
         <Toolbar>
-          <LibraryMusicIcon fontSize="large" className={classes.logo} />
+          <NavLink to="/" style={{ textDecoration: "none", color: "inherit" }}>
+            <LibraryMusicIcon fontSize="large" className={classes.logo} />
+          </NavLink>
           <Typography variant="h5" className={classes.title}>
             BlockBeats
           </Typography>
-          <Button className={classes.addressButton}>
+          <Link to="/playground">
+            <Typography>Playground</Typography>
+          </Link>
+          <Button
+            component={Link}
+            to={{ pathname: `/profile` }}
+            className={classes.addressButton}>
             <Box class={classes.addressText}>{splitString(account)}</Box>
-            <Box>{}</Box>
             <AccountCircleIcon
               fontSize="large"
               className={classes.accountIcon}
@@ -122,6 +131,9 @@ const App = () => {
       <Switch>
         <Route path="/playground">
           <ContractPlayground />
+        </Route>
+        <Route path="/profile">
+          <Profile web3={web3} />
         </Route>
       </Switch>
     </Box>
