@@ -29,9 +29,9 @@
       "constant": true
     }
   ],
-  "metadata": "{\"compiler\":{\"version\":\"0.8.0+commit.c7dfd78e\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[],\"name\":\"get\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"x\",\"type\":\"uint256\"}],\"name\":\"set\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"/Users/gmulhearne/Documents/uni/COMS4507/project/blockbeats/contracts/SimpleStorage.sol\":\"SimpleStorage\"},\"evmVersion\":\"istanbul\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":false,\"runs\":200},\"remappings\":[]},\"sources\":{\"/Users/gmulhearne/Documents/uni/COMS4507/project/blockbeats/contracts/SimpleStorage.sol\":{\"keccak256\":\"0x8ed17405ab458c8b1390120e39c4fff567ef4cbc6966642ad4832b67e8b6fa26\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://12751bc99be16662634cf151ac8bb274d1041ece88d93f6e57acb928e2f6fb20\",\"dweb:/ipfs/QmVRo5sptAQYtXaABiury4fBHGEaUCgcJG3wH8k3eZB67c\"]}},\"version\":1}",
-  "bytecode": "0x608060405234801561001057600080fd5b5061012f806100206000396000f3fe6080604052348015600f57600080fd5b506004361060325760003560e01c806360fe47b11460375780636d4ce63c14604f575b600080fd5b604d600480360381019060499190608f565b6069565b005b60556073565b6040516060919060c2565b60405180910390f35b8060008190555050565b60008054905090565b60008135905060898160e5565b92915050565b60006020828403121560a057600080fd5b600060ac84828501607c565b91505092915050565b60bc8160db565b82525050565b600060208201905060d5600083018460b5565b92915050565b6000819050919050565b60ec8160db565b811460f657600080fd5b5056fea2646970667358221220d0706a3b4f3a9ca35b59d6fb46b2af7292e459778f398792d01d61782472e30964736f6c63430008000033",
-  "deployedBytecode": "0x6080604052348015600f57600080fd5b506004361060325760003560e01c806360fe47b11460375780636d4ce63c14604f575b600080fd5b604d600480360381019060499190608f565b6069565b005b60556073565b6040516060919060c2565b60405180910390f35b8060008190555050565b60008054905090565b60008135905060898160e5565b92915050565b60006020828403121560a057600080fd5b600060ac84828501607c565b91505092915050565b60bc8160db565b82525050565b600060208201905060d5600083018460b5565b92915050565b6000819050919050565b60ec8160db565b811460f657600080fd5b5056fea2646970667358221220d0706a3b4f3a9ca35b59d6fb46b2af7292e459778f398792d01d61782472e30964736f6c63430008000033",
+  "metadata": "{\"compiler\":{\"version\":\"0.8.0+commit.c7dfd78e\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[],\"name\":\"get\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"x\",\"type\":\"uint256\"}],\"name\":\"set\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"/Users/harrisonvanroy/Documents/dev/blockbeats/contracts/SimpleStorage.sol\":\"SimpleStorage\"},\"evmVersion\":\"istanbul\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":false,\"runs\":200},\"remappings\":[]},\"sources\":{\"/Users/harrisonvanroy/Documents/dev/blockbeats/contracts/SimpleStorage.sol\":{\"keccak256\":\"0x8ed17405ab458c8b1390120e39c4fff567ef4cbc6966642ad4832b67e8b6fa26\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://12751bc99be16662634cf151ac8bb274d1041ece88d93f6e57acb928e2f6fb20\",\"dweb:/ipfs/QmVRo5sptAQYtXaABiury4fBHGEaUCgcJG3wH8k3eZB67c\"]}},\"version\":1}",
+  "bytecode": "0x608060405234801561001057600080fd5b5061012f806100206000396000f3fe6080604052348015600f57600080fd5b506004361060325760003560e01c806360fe47b11460375780636d4ce63c14604f575b600080fd5b604d600480360381019060499190608f565b6069565b005b60556073565b6040516060919060c2565b60405180910390f35b8060008190555050565b60008054905090565b60008135905060898160e5565b92915050565b60006020828403121560a057600080fd5b600060ac84828501607c565b91505092915050565b60bc8160db565b82525050565b600060208201905060d5600083018460b5565b92915050565b6000819050919050565b60ec8160db565b811460f657600080fd5b5056fea264697066735822122058cfeba7588881efb93a452dc9506a28ccbabcf4595793ffc73e51c93fc28c5f64736f6c63430008000033",
+  "deployedBytecode": "0x6080604052348015600f57600080fd5b506004361060325760003560e01c806360fe47b11460375780636d4ce63c14604f575b600080fd5b604d600480360381019060499190608f565b6069565b005b60556073565b6040516060919060c2565b60405180910390f35b8060008190555050565b60008054905090565b60008135905060898160e5565b92915050565b60006020828403121560a057600080fd5b600060ac84828501607c565b91505092915050565b60bc8160db565b82525050565b600060208201905060d5600083018460b5565b92915050565b6000819050919050565b60ec8160db565b811460f657600080fd5b5056fea264697066735822122058cfeba7588881efb93a452dc9506a28ccbabcf4595793ffc73e51c93fc28c5f64736f6c63430008000033",
   "immutableReferences": {},
   "generatedSources": [],
   "deployedGeneratedSources": [
@@ -630,9 +630,9 @@
   "sourceMap": "66:176:2:-:0;;;;;;;;;;;;;;;;;;;",
   "deployedSourceMap": "66:176:2:-:0;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;113:53;;;;;;;;;;;;;:::i;:::-;;:::i;:::-;;170:70;;;:::i;:::-;;;;;;;:::i;:::-;;;;;;;;113:53;160:1;147:10;:14;;;;113:53;:::o;170:70::-;206:4;225:10;;218:17;;170:70;:::o;7:139:12:-;;91:6;78:20;69:29;;107:33;134:5;107:33;:::i;:::-;59:87;;;;:::o;152:262::-;;260:2;248:9;239:7;235:23;231:32;228:2;;;276:1;273;266:12;228:2;319:1;344:53;389:7;380:6;369:9;365:22;344:53;:::i;:::-;334:63;;290:117;218:196;;;;:::o;420:118::-;507:24;525:5;507:24;:::i;:::-;502:3;495:37;485:53;;:::o;544:222::-;;675:2;664:9;660:18;652:26;;688:71;756:1;745:9;741:17;732:6;688:71;:::i;:::-;642:124;;;;:::o;772:77::-;;838:5;827:16;;817:32;;;:::o;855:122::-;928:24;946:5;928:24;:::i;:::-;921:5;918:35;908:2;;967:1;964;957:12;908:2;898:79;:::o",
   "source": "// SPDX-License-Identifier: MIT\npragma solidity >=0.4.21 <0.8.4;\n\ncontract SimpleStorage {\n  uint storedData;\n\n  function set(uint x) public {\n    storedData = x;\n  }\n\n  function get() public view returns (uint) {\n    return storedData;\n  }\n}\n",
-  "sourcePath": "/Users/gmulhearne/Documents/uni/COMS4507/project/blockbeats/contracts/SimpleStorage.sol",
+  "sourcePath": "/Users/harrisonvanroy/Documents/dev/blockbeats/contracts/SimpleStorage.sol",
   "ast": {
-    "absolutePath": "/Users/gmulhearne/Documents/uni/COMS4507/project/blockbeats/contracts/SimpleStorage.sol",
+    "absolutePath": "/Users/harrisonvanroy/Documents/dev/blockbeats/contracts/SimpleStorage.sol",
     "exportedSymbols": {
       "SimpleStorage": [
         287
@@ -884,7 +884,7 @@
     "src": "32:211:2"
   },
   "legacyAST": {
-    "absolutePath": "/Users/gmulhearne/Documents/uni/COMS4507/project/blockbeats/contracts/SimpleStorage.sol",
+    "absolutePath": "/Users/harrisonvanroy/Documents/dev/blockbeats/contracts/SimpleStorage.sol",
     "exportedSymbols": {
       "SimpleStorage": [
         287
@@ -1143,12 +1143,12 @@
     "5777": {
       "events": {},
       "links": {},
-      "address": "0x799DFa2c0F28F566a70Be10AD3B4227348743190",
-      "transactionHash": "0xcd9f78bd9457ddefe3d6a4ada4c91c97cdf175729c2116ff0d01f58b76b2cd47"
+      "address": "0x5bc585283C70AA12F55ECf92dD4d828766A592dD",
+      "transactionHash": "0xeca1e53f2da5b4f45a697d74e9dc83ab2d1bd0025354178efcb8ebed46fa241f"
     }
   },
   "schemaVersion": "3.3.4",
-  "updatedAt": "2021-04-16T00:42:28.951Z",
+  "updatedAt": "2021-04-16T01:35:00.203Z",
   "networkType": "ethereum",
   "devdoc": {
     "kind": "dev",
