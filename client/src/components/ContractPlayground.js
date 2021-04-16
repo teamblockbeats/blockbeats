@@ -117,10 +117,12 @@ const ContractPlayground = () => {
   };
 
   const handleCreateListing = async () => {
-    console.log("create listing")
-    let result = await contract.methods.createListing(title, price, URI).send({from: account});
-    console.log(result)
-  }
+    console.log("create listing");
+    let result = await contract.methods
+      .createListing(title, price, URI)
+      .send({ from: account });
+    console.log(result);
+  };
 
   return (
     <div>
@@ -132,7 +134,9 @@ const ContractPlayground = () => {
                 <Typography className={classes.paperTitle}>
                   View Listings
                 </Typography>
-                {listings.map((listing) => <Typography>{listing}</Typography>)}
+                {listings.map((listing) => (
+                  <Typography>{listing}</Typography>
+                ))}
                 <Button
                   fullWidth
                   variant="contained"
