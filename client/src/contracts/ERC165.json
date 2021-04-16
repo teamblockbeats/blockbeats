@@ -21,7 +21,7 @@
       "type": "function"
     }
   ],
-  "metadata": "{\"compiler\":{\"version\":\"0.8.0+commit.c7dfd78e\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[{\"internalType\":\"bytes4\",\"name\":\"interfaceId\",\"type\":\"bytes4\"}],\"name\":\"supportsInterface\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"}],\"devdoc\":{\"details\":\"Implementation of the {IERC165} interface. Contracts that want to implement ERC165 should inherit from this contract and override {supportsInterface} to check for the additional interface id that will be supported. For example: ```solidity function supportsInterface(bytes4 interfaceId) public view virtual override returns (bool) {     return interfaceId == type(MyInterface).interfaceId || super.supportsInterface(interfaceId); } ``` Alternatively, {ERC165Storage} provides an easier to use but more expensive implementation.\",\"kind\":\"dev\",\"methods\":{\"supportsInterface(bytes4)\":{\"details\":\"See {IERC165-supportsInterface}.\"}},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"/Users/harrisonvanroy/Documents/dev/blockbeats/contracts/openzepplin/utils/introspection/ERC165.sol\":\"ERC165\"},\"evmVersion\":\"istanbul\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":false,\"runs\":200},\"remappings\":[]},\"sources\":{\"/Users/harrisonvanroy/Documents/dev/blockbeats/contracts/openzepplin/utils/introspection/ERC165.sol\":{\"keccak256\":\"0x0969c3b761eb3af95a44d2c5b89822572d87441f2ca64d9fa80d7cbab667e42b\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://e6fac9609abaa5cab3d96f7ebdae42570f8be9dfd5b8578289ae1aceeaa503b6\",\"dweb:/ipfs/QmX9vGsJP3fgD1W6cVTsp2HFCaD3Gek6ZELT5167eJ2j1T\"]},\"/Users/harrisonvanroy/Documents/dev/blockbeats/contracts/openzepplin/utils/introspection/IERC165.sol\":{\"keccak256\":\"0xf09ac5164ff53811c21c1a05f01ca2b1c91edace33903c767d432b68d92dc587\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://6eb4595b183a284785cfb2ad533f52a35cca59bbce92e682479b29157fdbe63d\",\"dweb:/ipfs/QmfAgJjE7uj73mLaYjqBE5ba5GanWKFyLEG4qmuYxbZ9zR\"]}},\"version\":1}",
+  "metadata": "{\"compiler\":{\"version\":\"0.8.0+commit.c7dfd78e\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[{\"internalType\":\"bytes4\",\"name\":\"interfaceId\",\"type\":\"bytes4\"}],\"name\":\"supportsInterface\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"}],\"devdoc\":{\"details\":\"Implementation of the {IERC165} interface. Contracts that want to implement ERC165 should inherit from this contract and override {supportsInterface} to check for the additional interface id that will be supported. For example: ```solidity function supportsInterface(bytes4 interfaceId) public view virtual override returns (bool) {     return interfaceId == type(MyInterface).interfaceId || super.supportsInterface(interfaceId); } ``` Alternatively, {ERC165Storage} provides an easier to use but more expensive implementation.\",\"kind\":\"dev\",\"methods\":{\"supportsInterface(bytes4)\":{\"details\":\"See {IERC165-supportsInterface}.\"}},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"/Users/gmulhearne/Documents/uni/COMS4507/project/blockbeats/contracts/openzepplin/utils/introspection/ERC165.sol\":\"ERC165\"},\"evmVersion\":\"istanbul\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":false,\"runs\":200},\"remappings\":[]},\"sources\":{\"/Users/gmulhearne/Documents/uni/COMS4507/project/blockbeats/contracts/openzepplin/utils/introspection/ERC165.sol\":{\"keccak256\":\"0x0969c3b761eb3af95a44d2c5b89822572d87441f2ca64d9fa80d7cbab667e42b\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://e6fac9609abaa5cab3d96f7ebdae42570f8be9dfd5b8578289ae1aceeaa503b6\",\"dweb:/ipfs/QmX9vGsJP3fgD1W6cVTsp2HFCaD3Gek6ZELT5167eJ2j1T\"]},\"/Users/gmulhearne/Documents/uni/COMS4507/project/blockbeats/contracts/openzepplin/utils/introspection/IERC165.sol\":{\"keccak256\":\"0xf09ac5164ff53811c21c1a05f01ca2b1c91edace33903c767d432b68d92dc587\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://6eb4595b183a284785cfb2ad533f52a35cca59bbce92e682479b29157fdbe63d\",\"dweb:/ipfs/QmfAgJjE7uj73mLaYjqBE5ba5GanWKFyLEG4qmuYxbZ9zR\"]}},\"version\":1}",
   "bytecode": "0x",
   "deployedBytecode": "0x",
   "immutableReferences": {},
@@ -30,9 +30,9 @@
   "sourceMap": "",
   "deployedSourceMap": "",
   "source": "// SPDX-License-Identifier: MIT\n\npragma solidity ^0.8.0;\n\nimport \"./IERC165.sol\";\n\n/**\n * @dev Implementation of the {IERC165} interface.\n *\n * Contracts that want to implement ERC165 should inherit from this contract and override {supportsInterface} to check\n * for the additional interface id that will be supported. For example:\n *\n * ```solidity\n * function supportsInterface(bytes4 interfaceId) public view virtual override returns (bool) {\n *     return interfaceId == type(MyInterface).interfaceId || super.supportsInterface(interfaceId);\n * }\n * ```\n *\n * Alternatively, {ERC165Storage} provides an easier to use but more expensive implementation.\n */\nabstract contract ERC165 is IERC165 {\n    /**\n     * @dev See {IERC165-supportsInterface}.\n     */\n    function supportsInterface(bytes4 interfaceId) public view virtual override returns (bool) {\n        return interfaceId == type(IERC165).interfaceId;\n    }\n}",
-  "sourcePath": "/Users/harrisonvanroy/Documents/dev/blockbeats/contracts/openzepplin/utils/introspection/ERC165.sol",
+  "sourcePath": "/Users/gmulhearne/Documents/uni/COMS4507/project/blockbeats/contracts/openzepplin/utils/introspection/ERC165.sol",
   "ast": {
-    "absolutePath": "/Users/harrisonvanroy/Documents/dev/blockbeats/contracts/openzepplin/utils/introspection/ERC165.sol",
+    "absolutePath": "/Users/gmulhearne/Documents/uni/COMS4507/project/blockbeats/contracts/openzepplin/utils/introspection/ERC165.sol",
     "exportedSymbols": {
       "ERC165": [
         1812
@@ -57,7 +57,7 @@
         "src": "33:23:10"
       },
       {
-        "absolutePath": "/Users/harrisonvanroy/Documents/dev/blockbeats/contracts/openzepplin/utils/introspection/IERC165.sol",
+        "absolutePath": "/Users/gmulhearne/Documents/uni/COMS4507/project/blockbeats/contracts/openzepplin/utils/introspection/IERC165.sol",
         "file": "./IERC165.sol",
         "id": 1791,
         "nodeType": "ImportDirective",
@@ -310,7 +310,7 @@
     "src": "33:887:10"
   },
   "legacyAST": {
-    "absolutePath": "/Users/harrisonvanroy/Documents/dev/blockbeats/contracts/openzepplin/utils/introspection/ERC165.sol",
+    "absolutePath": "/Users/gmulhearne/Documents/uni/COMS4507/project/blockbeats/contracts/openzepplin/utils/introspection/ERC165.sol",
     "exportedSymbols": {
       "ERC165": [
         1812
@@ -335,7 +335,7 @@
         "src": "33:23:10"
       },
       {
-        "absolutePath": "/Users/harrisonvanroy/Documents/dev/blockbeats/contracts/openzepplin/utils/introspection/IERC165.sol",
+        "absolutePath": "/Users/gmulhearne/Documents/uni/COMS4507/project/blockbeats/contracts/openzepplin/utils/introspection/IERC165.sol",
         "file": "./IERC165.sol",
         "id": 1791,
         "nodeType": "ImportDirective",
@@ -593,7 +593,7 @@
   },
   "networks": {},
   "schemaVersion": "3.3.4",
-  "updatedAt": "2021-04-16T01:27:26.376Z",
+  "updatedAt": "2021-04-16T01:52:52.278Z",
   "devdoc": {
     "details": "Implementation of the {IERC165} interface. Contracts that want to implement ERC165 should inherit from this contract and override {supportsInterface} to check for the additional interface id that will be supported. For example: ```solidity function supportsInterface(bytes4 interfaceId) public view virtual override returns (bool) {     return interfaceId == type(MyInterface).interfaceId || super.supportsInterface(interfaceId); } ``` Alternatively, {ERC165Storage} provides an easier to use but more expensive implementation.",
     "kind": "dev",
