@@ -10,6 +10,9 @@ import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
 import Box from "@material-ui/core/Box";
 import ContractPlayground from "./components/ContractPlayground";
+import LibraryMusicIcon from "@material-ui/icons/LibraryMusic";
+import AccountCircleIcon from "@material-ui/icons/AccountCircle";
+import Profile from "./components/Profile";
 import { Switch, Route, Link, NavLink } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
@@ -19,8 +22,14 @@ const useStyles = makeStyles((theme) => ({
   title: {
     flexGrow: 1,
   },
+  logo: {
+    marginRight: theme.spacing(2),
+  },
+  accountIcon: {
+    marginLeft: theme.spacing(2),
+  },
   addressButton: {
-    background: "linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)",
+    background: "linear-gradient(90deg, #DE4278 30%, #42DEA8 90%)",
     color: "white",
   },
   addressText: {
@@ -33,6 +42,7 @@ const useStyles = makeStyles((theme) => ({
 
 const App = () => {
   const [account, setAccount] = useState(null);
+  const [web3, setWeb3] = useState(null);
   const [contract, setContract] = useState(null);
   const [invalidNetwork, setInvalidNetWork] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -59,7 +69,7 @@ const App = () => {
 
   const loadBlockChainData = async () => {
     const web3 = window.web3;
-
+    setWeb3(web3);
     // Use web3 to get the user's accounts.
     const accounts = await web3.eth.getAccounts();
     setAccount(accounts[0]);
@@ -85,22 +95,45 @@ const App = () => {
   if (invalidNetwork) {
     return <div>Not using metamask with test network grr</div>;
   }
+  const splitString = (value) => {
+    const slice = Math.round(value.length / 10);
+    return `${value.substr(0, slice)}...${value.substr(
+      value.length - slice,
+      value.length
+    )}`;
+  };
 
   return (
     <Box className={classes.root}>
       <AppBar position="sticky" color="inherit">
         <Toolbar>
-          <Typography variant="h6" className={classes.title}>
+          <NavLink to="/" style={{ textDecoration: "none", color: "inherit" }}>
+            <LibraryMusicIcon fontSize="large" className={classes.logo} />
+          </NavLink>
+          <Typography variant="h5" className={classes.title}>
             BlockBeats
           </Typography>
-          <Button className={classes.addressButton}>
-            <Box class={classes.addressText}>{account}</Box>
+          <Link to="/playground">
+            <Typography>Playground</Typography>
+          </Link>
+          <Button
+            component={Link}
+            to={{ pathname: `/profile` }}
+            className={classes.addressButton}>
+            <Box class={classes.addressText}>{splitString(account)}</Box>
+            <AccountCircleIcon
+              fontSize="large"
+              className={classes.accountIcon}
+            />
           </Button>
         </Toolbar>
       </AppBar>
       <Switch>
         <Route path="/playground">
           <ContractPlayground />
+        </Route>
+        <Route path="/profile">
+          <Profile web3={web3} />
         </Route>
       </Switch>
     </Box>
