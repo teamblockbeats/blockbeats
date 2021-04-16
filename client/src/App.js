@@ -10,6 +10,8 @@ import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
 import Box from "@material-ui/core/Box";
 import ContractPlayground from "./components/ContractPlayground";
+import LibraryMusicIcon from "@material-ui/icons/LibraryMusic";
+import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 import { Switch, Route, Link, NavLink } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
@@ -19,8 +21,14 @@ const useStyles = makeStyles((theme) => ({
   title: {
     flexGrow: 1,
   },
+  logo: {
+    marginRight: theme.spacing(2),
+  },
+  accountIcon: {
+    marginLeft: theme.spacing(2),
+  },
   addressButton: {
-    background: "linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)",
+    background: "linear-gradient(90deg, #DE4278 30%, #42DEA8 90%)",
     color: "white",
   },
   addressText: {
@@ -85,16 +93,29 @@ const App = () => {
   if (invalidNetwork) {
     return <div>Not using metamask with test network grr</div>;
   }
+  const splitString = (value) => {
+    const slice = Math.round(value.length / 10);
+    return `${value.substr(0, slice)}...${value.substr(
+      value.length - slice,
+      value.length
+    )}`;
+  };
 
   return (
     <Box className={classes.root}>
       <AppBar position="sticky" color="inherit">
         <Toolbar>
-          <Typography variant="h6" className={classes.title}>
+          <LibraryMusicIcon fontSize="large" className={classes.logo} />
+          <Typography variant="h5" className={classes.title}>
             BlockBeats
           </Typography>
           <Button className={classes.addressButton}>
-            <Box class={classes.addressText}>{account}</Box>
+            <Box class={classes.addressText}>{splitString(account)}</Box>
+            <Box>{}</Box>
+            <AccountCircleIcon
+              fontSize="large"
+              className={classes.accountIcon}
+            />
           </Button>
         </Toolbar>
       </AppBar>
