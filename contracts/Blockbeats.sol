@@ -18,6 +18,8 @@ contract Blockbeats is ERC721 {
 
     uint256 numTokens = 0;
     mapping(uint256 => string) private _tokenURIs;
+    mapping(address => uint256[]) private _ownersTokens;
+    mapping(uint256 => uint256) private _tokenListings;
     Listing[] public listings;
 
     constructor() ERC721("BBLicenses", "BBLC") {}
@@ -54,8 +56,19 @@ contract Blockbeats is ERC721 {
         require(msg.value == price, "Paid incorrect amount for listing");
 
         listings[id].creator.transfer(msg.value); // is transfer safe?
+        
+        _tokenListings[numTokens] = id;
 
         mint(listings[id].URI);
+    }
+    
+    function tokensAtAddress(address owner) public view returns (uint256[] memory) {
+        return(_ownersTokens[owner]);
+    }
+    
+    function resolveTokenToListing(uint256 tokenId) public view returns (Listing memory) {
+        uint256 listingId = _tokenListings[tokenId];
+        return listings[listingId];
     }
 
     /****************************/
@@ -65,6 +78,7 @@ contract Blockbeats is ERC721 {
     function mint(string memory tokenURI_) private {
         _mint(msg.sender, numTokens);
         _setTokenURI(numTokens, tokenURI_);
+        _ownersTokens[msg.sender].push(numTokens);
         numTokens++;
     }
 
@@ -92,7 +106,7 @@ contract Blockbeats is ERC721 {
         );
 
         string memory _tokenURI = _tokenURIs[tokenId];
-        string memory base = "unset-base";
+        string memory base = "error-unset-URI";
 
         // If there is no base URI, return the token URI.
         if (bytes(base).length == 0) {

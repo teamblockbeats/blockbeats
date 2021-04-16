@@ -27,7 +27,7 @@ const ContractPlayground = () => {
   const [contract, setContract] = useState(null);
   const [invalidNetwork, setInvalidNetWork] = useState(false);
   const [loading, setLoading] = useState(true);
-  const [listings, setListings] = useState([[]]);
+  const [listings, setListings] = useState([]);
 
   const [title, setTitle] = useState(null);
   const [URI, setURI] = useState(null);
@@ -133,17 +133,33 @@ const ContractPlayground = () => {
 
   const handleBuyListing = async () => {
     console.log("buy listing " + buyingID.toString());
-    let listingPrice = getPriceOfListing(buyingID)
-    await contract.methods.buyListing(buyingID).send({ from: account,
-    value: listingPrice});
+    let listingPrice = getPriceOfListing(buyingID);
+    await contract.methods
+      .buyListing(buyingID)
+      .send({ from: account, value: listingPrice });
   };
 
   const handleGetLicenses = async () => {
     console.log("get license");
+    let tokenIds = await contract.methods
+      .tokensAtAddress(account)
+      .call({ from: account });
+    let licenses = [];
+    for (const tokenId of tokenIds) {
+      console.log(tokenId);
+      let license = await contract.methods
+        .resolveTokenToListing(tokenId)
+        .call({ from: account });
+      license["tokenId"] = tokenId;
+      licenses.push(license);
+    }
+    setMyLicenses(licenses);
   };
 
   const getPriceOfListing = (id) => {
-    return Number((listings.filter((item) => Number(item["id"]) === id)[0]["price"]));
+    return Number(
+      listings.filter((item) => Number(item["id"]) === id)[0]["price"]
+    );
   };
 
   return (
@@ -175,11 +191,21 @@ const ContractPlayground = () => {
                 </Typography>
                 {listings.map((listing) => (
                   <Paper variant="outlined">
-                    <Typography><b>ID:</b> {listing["id"]}</Typography>
-                    <Typography><b>Title:</b> {listing["title"]}</Typography>
-                    <Typography><b>URI:</b> {listing["URI"]}</Typography>
-                    <Typography><b>Price:</b> {listing["price"]}</Typography>
-                    <Typography><b>Creator:</b> {listing["creator"]}</Typography>
+                    <Typography>
+                      <b>ID:</b> {listing["id"]}
+                    </Typography>
+                    <Typography>
+                      <b>Title:</b> {listing["title"]}
+                    </Typography>
+                    <Typography>
+                      <b>URI:</b> {listing["URI"]}
+                    </Typography>
+                    <Typography>
+                      <b>Price:</b> {listing["price"]}
+                    </Typography>
+                    <Typography>
+                      <b>Creator:</b> {listing["creator"]}
+                    </Typography>
                   </Paper>
                 ))}
                 <Button
@@ -225,7 +251,24 @@ const ContractPlayground = () => {
                 </Typography>
                 {myLicenses.map((license) => (
                   <Paper variant="outlined">
-                    <Typography>{license}</Typography>
+                    <Typography>
+                      <b>Token ID:</b> {license["tokenId"]}
+                    </Typography>
+                    <Typography>
+                      <b>Listing ID:</b> {license["id"]}
+                    </Typography>
+                    <Typography>
+                      <b>Title:</b> {license["title"]}
+                    </Typography>
+                    <Typography>
+                      <b>URI:</b> {license["URI"]}
+                    </Typography>
+                    <Typography>
+                      <b>Price:</b> {license["price"]}
+                    </Typography>
+                    <Typography>
+                      <b>Creator:</b> {license["creator"]}
+                    </Typography>
                   </Paper>
                 ))}
                 <Button
