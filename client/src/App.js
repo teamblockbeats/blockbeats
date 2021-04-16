@@ -9,6 +9,8 @@ import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
 import Box from "@material-ui/core/Box";
+import ContractPlayground from "./components/ContractPlayground";
+import { Switch, Route, Link, NavLink } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -96,6 +98,11 @@ const App = () => {
           </Button>
         </Toolbar>
       </AppBar>
+      <Switch>
+        <Route path="/playground">
+          <ContractPlayground />
+        </Route>
+      </Switch>
     </Box>
   );
 };
