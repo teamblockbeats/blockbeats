@@ -27,11 +27,15 @@ const ContractPlayground = () => {
   const [contract, setContract] = useState(null);
   const [invalidNetwork, setInvalidNetWork] = useState(false);
   const [loading, setLoading] = useState(true);
-  const [listings, setListings] = useState(["no listings.."]);
+  const [listings, setListings] = useState([[]]);
 
   const [title, setTitle] = useState(null);
   const [URI, setURI] = useState(null);
   const [price, setPrice] = useState(null);
+
+  const [buyingID, setBuyingID] = useState(null);
+
+  const [myLicenses, setMyLicenses] = useState([]);
 
   useEffect(() => {
     if (!window.web3) {
@@ -86,6 +90,10 @@ const ContractPlayground = () => {
     setPrice(Number(event.target.value));
   };
 
+  const handleBuyIDChange = (event) => {
+    setBuyingID(Number(event.target.value));
+  };
+
   const drawListingInputFields = () => {
     return (
       <FormControl fullWidth style={{ marginBottom: 12 }}>
@@ -110,7 +118,6 @@ const ContractPlayground = () => {
 
   const handleViewListings = async () => {
     console.log("view listings");
-
     const listingsRet = await contract.methods.viewListings().call();
     console.log(listingsRet);
     setListings(listingsRet);
@@ -124,30 +131,27 @@ const ContractPlayground = () => {
     console.log(result);
   };
 
+  const handleBuyListing = async () => {
+    console.log("buy listing " + buyingID.toString());
+    let listingPrice = getPriceOfListing(buyingID)
+    await contract.methods.buyListing(buyingID).send({ from: account,
+    value: listingPrice});
+  };
+
+  const handleGetLicenses = async () => {
+    console.log("get license");
+  };
+
+  const getPriceOfListing = (id) => {
+    return Number((listings.filter((item) => Number(item["id"]) === id)[0]["price"]));
+  };
+
   return (
     <div>
       <Grid container justify="center" spacing={3}>
         <Grid item xs={12}>
-          <Grid container justify="center" direction="column" spacing={3}>
-            <Grid item xs={6}>
-              <Paper elevation={3} className={classes.paper}>
-                <Typography className={classes.paperTitle}>
-                  View Listings
-                </Typography>
-                {listings.map((listing) => (
-                  <Typography>{listing}</Typography>
-                ))}
-                <Button
-                  fullWidth
-                  variant="contained"
-                  onClick={handleViewListings}
-                  color="primary"
-                  style={{ color: "white" }}>
-                  View Listings
-                </Button>
-              </Paper>
-            </Grid>
-            <Grid item xs={6}>
+          <Grid container justify="center" direction="row" spacing={3}>
+            <Grid item xs={12} md={6}>
               <Paper elevation={3} className={classes.paper}>
                 <Typography className={classes.paperTitle}>
                   Create Listing
@@ -158,8 +162,80 @@ const ContractPlayground = () => {
                   variant="contained"
                   onClick={handleCreateListing}
                   color="primary"
-                  style={{ color: "white" }}>
+                  style={{ color: "white" }}
+                >
                   Create Listing
+                </Button>
+              </Paper>
+            </Grid>
+            <Grid item xs={12} md={6}>
+              <Paper elevation={3} className={classes.paper}>
+                <Typography className={classes.paperTitle}>
+                  View Listings
+                </Typography>
+                {listings.map((listing) => (
+                  <Paper variant="outlined">
+                    <Typography><b>ID:</b> {listing["id"]}</Typography>
+                    <Typography><b>Title:</b> {listing["title"]}</Typography>
+                    <Typography><b>URI:</b> {listing["URI"]}</Typography>
+                    <Typography><b>Price:</b> {listing["price"]}</Typography>
+                    <Typography><b>Creator:</b> {listing["creator"]}</Typography>
+                  </Paper>
+                ))}
+                <Button
+                  fullWidth
+                  variant="contained"
+                  onClick={handleViewListings}
+                  color="primary"
+                  style={{ color: "white" }}
+                >
+                  View Listings
+                </Button>
+              </Paper>
+            </Grid>
+          </Grid>
+          <Grid container justify="center" direction="row" spacing={3}>
+            <Grid item xs={12} md={6}>
+              <Paper elevation={3} className={classes.paper}>
+                <Typography className={classes.paperTitle}>
+                  Buy License
+                </Typography>
+                <FormControl fullWidth style={{ marginBottom: 12 }}>
+                  <TextField
+                    placeholder="Enter Listing ID..."
+                    variant="outlined"
+                    onChange={(e) => handleBuyIDChange(e)}
+                  />
+                </FormControl>
+                <Button
+                  fullWidth
+                  variant="contained"
+                  onClick={handleBuyListing}
+                  color="primary"
+                  style={{ color: "white" }}
+                >
+                  Buy License
+                </Button>
+              </Paper>
+            </Grid>
+            <Grid item xs={12} md={6}>
+              <Paper elevation={3} className={classes.paper}>
+                <Typography className={classes.paperTitle}>
+                  View My Licenses
+                </Typography>
+                {myLicenses.map((license) => (
+                  <Paper variant="outlined">
+                    <Typography>{license}</Typography>
+                  </Paper>
+                ))}
+                <Button
+                  fullWidth
+                  variant="contained"
+                  onClick={handleGetLicenses}
+                  color="primary"
+                  style={{ color: "white" }}
+                >
+                  View My Licenses
                 </Button>
               </Paper>
             </Grid>
