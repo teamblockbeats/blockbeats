@@ -1,7 +1,7 @@
-import { Box, Typography } from "@material-ui/core";
+import { Typography } from "@material-ui/core";
 import React from "react";
 
-const Profile = ({ web3 }) => {
+const Profile = () => {
   return <Typography>asdfas</Typography>;
 };
 

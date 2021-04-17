@@ -4,7 +4,7 @@ import Paper from "@material-ui/core/Paper";
 import { makeStyles } from "@material-ui/core/styles";
 import { Button, Typography } from "@material-ui/core";
 import Web3 from "web3";
-import BlockBeats from ".././contracts/Blockbeats.json";
+import BlockBeats from "../contracts/Blockbeats.json";
 import TextField from "@material-ui/core/TextField";
 import FormControl from "@material-ui/core/FormControl";
 
@@ -178,8 +178,7 @@ const ContractPlayground = () => {
                   variant="contained"
                   onClick={handleCreateListing}
                   color="primary"
-                  style={{ color: "white" }}
-                >
+                  style={{ color: "white" }}>
                   Create Listing
                 </Button>
               </Paper>
@@ -213,8 +212,7 @@ const ContractPlayground = () => {
                   variant="contained"
                   onClick={handleViewListings}
                   color="primary"
-                  style={{ color: "white" }}
-                >
+                  style={{ color: "white" }}>
                   View Listings
                 </Button>
               </Paper>
@@ -238,8 +236,7 @@ const ContractPlayground = () => {
                   variant="contained"
                   onClick={handleBuyListing}
                   color="primary"
-                  style={{ color: "white" }}
-                >
+                  style={{ color: "white" }}>
                   Buy License
                 </Button>
               </Paper>
@@ -276,8 +273,7 @@ const ContractPlayground = () => {
                   variant="contained"
                   onClick={handleGetLicenses}
                   color="primary"
-                  style={{ color: "white" }}
-                >
+                  style={{ color: "white" }}>
                   View My Licenses
                 </Button>
               </Paper>
