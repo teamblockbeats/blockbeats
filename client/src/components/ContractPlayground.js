@@ -4,7 +4,7 @@ import Paper from "@material-ui/core/Paper";
 import { makeStyles } from "@material-ui/core/styles";
 import { Button, Typography } from "@material-ui/core";
 import Web3 from "web3";
-import BlockBeats from ".././contracts/Blockbeats.json";
+import BlockBeats from "../contracts/Blockbeats.json";
 import TextField from "@material-ui/core/TextField";
 import FormControl from "@material-ui/core/FormControl";
 
@@ -133,9 +133,10 @@ const ContractPlayground = () => {
 
   const handleBuyListing = async () => {
     console.log("buy listing " + buyingID.toString());
-    let listingPrice = getPriceOfListing(buyingID)
-    await contract.methods.buyListing(buyingID).send({ from: account,
-    value: listingPrice});
+    let listingPrice = getPriceOfListing(buyingID);
+    await contract.methods
+      .buyListing(buyingID)
+      .send({ from: account, value: listingPrice });
   };
 
   const handleGetLicenses = async () => {
@@ -143,7 +144,9 @@ const ContractPlayground = () => {
   };
 
   const getPriceOfListing = (id) => {
-    return Number((listings.filter((item) => Number(item["id"]) === id)[0]["price"]));
+    return Number(
+      listings.filter((item) => Number(item["id"]) === id)[0]["price"]
+    );
   };
 
   return (
@@ -162,8 +165,7 @@ const ContractPlayground = () => {
                   variant="contained"
                   onClick={handleCreateListing}
                   color="primary"
-                  style={{ color: "white" }}
-                >
+                  style={{ color: "white" }}>
                   Create Listing
                 </Button>
               </Paper>
@@ -175,11 +177,21 @@ const ContractPlayground = () => {
                 </Typography>
                 {listings.map((listing) => (
                   <Paper variant="outlined">
-                    <Typography><b>ID:</b> {listing["id"]}</Typography>
-                    <Typography><b>Title:</b> {listing["title"]}</Typography>
-                    <Typography><b>URI:</b> {listing["URI"]}</Typography>
-                    <Typography><b>Price:</b> {listing["price"]}</Typography>
-                    <Typography><b>Creator:</b> {listing["creator"]}</Typography>
+                    <Typography>
+                      <b>ID:</b> {listing["id"]}
+                    </Typography>
+                    <Typography>
+                      <b>Title:</b> {listing["title"]}
+                    </Typography>
+                    <Typography>
+                      <b>URI:</b> {listing["URI"]}
+                    </Typography>
+                    <Typography>
+                      <b>Price:</b> {listing["price"]}
+                    </Typography>
+                    <Typography>
+                      <b>Creator:</b> {listing["creator"]}
+                    </Typography>
                   </Paper>
                 ))}
                 <Button
@@ -187,8 +199,7 @@ const ContractPlayground = () => {
                   variant="contained"
                   onClick={handleViewListings}
                   color="primary"
-                  style={{ color: "white" }}
-                >
+                  style={{ color: "white" }}>
                   View Listings
                 </Button>
               </Paper>
@@ -212,8 +223,7 @@ const ContractPlayground = () => {
                   variant="contained"
                   onClick={handleBuyListing}
                   color="primary"
-                  style={{ color: "white" }}
-                >
+                  style={{ color: "white" }}>
                   Buy License
                 </Button>
               </Paper>
@@ -233,8 +243,7 @@ const ContractPlayground = () => {
                   variant="contained"
                   onClick={handleGetLicenses}
                   color="primary"
-                  style={{ color: "white" }}
-                >
+                  style={{ color: "white" }}>
                   View My Licenses
                 </Button>
               </Paper>

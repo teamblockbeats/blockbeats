@@ -1,139 +1,66 @@
 import React, { useState, useEffect } from "react";
-import SimpleStorageContract from "./contracts/SimpleStorage.json";
-import Web3 from "web3";
-import "./App.css";
-
+import getWeb3 from "./getWeb3";
 import { makeStyles } from "@material-ui/core/styles";
-import AppBar from "@material-ui/core/AppBar";
-import Toolbar from "@material-ui/core/Toolbar";
-import Typography from "@material-ui/core/Typography";
-import Button from "@material-ui/core/Button";
-import Box from "@material-ui/core/Box";
+import { Box } from "@material-ui/core";
 import ContractPlayground from "./components/ContractPlayground";
-import LibraryMusicIcon from "@material-ui/icons/LibraryMusic";
-import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 import Profile from "./components/Profile";
-import { Switch, Route, Link, NavLink } from "react-router-dom";
+import { Switch, Route } from "react-router-dom";
+import Header from "./components/Header";
+import Licenses from "./components/Licenses";
+import Upload from "./components/Upload";
+import Listings from "./components/Listings";
 
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
   },
-  title: {
-    flexGrow: 1,
-  },
-  logo: {
-    marginRight: theme.spacing(2),
-  },
-  accountIcon: {
-    marginLeft: theme.spacing(2),
-  },
-  addressButton: {
-    background: "linear-gradient(90deg, #DE4278 30%, #42DEA8 90%)",
-    color: "white",
-  },
-  addressText: {
-    width: "100px",
-    overflow: "hidden",
-    whiteSpace: "nowrap",
-    textOverflow: "ellipsis",
-  },
 }));
 
 const App = () => {
-  const [account, setAccount] = useState(null);
+  const [accounts, setAccounts] = useState(null);
   const [web3, setWeb3] = useState(null);
-  const [contract, setContract] = useState(null);
   const [invalidNetwork, setInvalidNetWork] = useState(false);
-  const [loading, setLoading] = useState(true);
 
   const classes = useStyles();
 
   useEffect(() => {
-    if (!window.web3) {
-      setInvalidNetWork(true);
-    } else {
-      loadWeb3();
-      loadBlockChainData();
-    }
+    getWeb3().then((web) => {
+      setWeb3(web);
+
+      web.eth.getAccounts().then((accounts) => {
+        setAccounts(accounts);
+      });
+
+      web.eth.net.getId().then((id) => {
+        if (id != 5777) {
+          setInvalidNetWork(true);
+        }
+      });
+    });
   }, []);
 
-  const loadWeb3 = async () => {
-    if (window.ethereum) {
-      window.web3 = new Web3(window.ethereum);
-      await window.ethereum.enable();
-    } else if (window.web3) {
-      window.web3 = new Web3(window.web3.currentProvider);
-    }
-  };
-
-  const loadBlockChainData = async () => {
-    const web3 = window.web3;
-    setWeb3(web3);
-    // Use web3 to get the user's accounts.
-    const accounts = await web3.eth.getAccounts();
-    setAccount(accounts[0]);
-
-    // Check correct network
-    const networkId = await web3.eth.net.getId();
-    if (networkId !== 5777) {
-      setInvalidNetWork(true);
-      setLoading(false);
-    } else {
-      const deployedNetwork = SimpleStorageContract.networks[networkId];
-      const instance = new web3.eth.Contract(
-        SimpleStorageContract.abi,
-        deployedNetwork.address
-      );
-      setContract(instance);
-      setLoading(false);
-    }
-  };
-  if (loading) {
-    return <div>loading</div>;
-  }
   if (invalidNetwork) {
     return <div>Not using metamask with test network grr</div>;
   }
-  const splitString = (value) => {
-    const slice = Math.round(value.length / 10);
-    return `${value.substr(0, slice)}...${value.substr(
-      value.length - slice,
-      value.length
-    )}`;
-  };
 
   return (
     <Box className={classes.root}>
-      <AppBar position="sticky" color="inherit">
-        <Toolbar>
-          <NavLink to="/" style={{ textDecoration: "none", color: "inherit" }}>
-            <LibraryMusicIcon fontSize="large" className={classes.logo} />
-          </NavLink>
-          <Typography variant="h5" className={classes.title}>
-            BlockBeats
-          </Typography>
-          <Link to="/playground">
-            <Typography>Playground</Typography>
-          </Link>
-          <Button
-            component={Link}
-            to={{ pathname: `/profile` }}
-            className={classes.addressButton}>
-            <Box class={classes.addressText}>{splitString(account)}</Box>
-            <AccountCircleIcon
-              fontSize="large"
-              className={classes.accountIcon}
-            />
-          </Button>
-        </Toolbar>
-      </AppBar>
+      <Header web3={web3} accounts={accounts} />
       <Switch>
         <Route path="/playground">
           <ContractPlayground />
         </Route>
+        <Route path="/upload">
+          <Upload />
+        </Route>
         <Route path="/profile">
-          <Profile web3={web3} />
+          <Profile />
+        </Route>
+        <Route path="/licenses">
+          <Licenses />
+        </Route>
+        <Route exact path="/">
+          <Listings web3={web3} accounts={accounts} />
         </Route>
       </Switch>
     </Box>
