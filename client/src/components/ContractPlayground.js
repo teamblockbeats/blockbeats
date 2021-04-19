@@ -7,6 +7,7 @@ import Web3 from "web3";
 import BlockBeats from "../contracts/Blockbeats.json";
 import TextField from "@material-ui/core/TextField";
 import FormControl from "@material-ui/core/FormControl";
+import { pinFileToIPFS } from "./pinataAPI";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -36,6 +37,8 @@ const ContractPlayground = () => {
   const [buyingID, setBuyingID] = useState(null);
 
   const [myLicenses, setMyLicenses] = useState([]);
+
+  const [fileToPin, setFileToPin] = useState(null)
 
   useEffect(() => {
     if (!window.web3) {
@@ -162,6 +165,55 @@ const ContractPlayground = () => {
     );
   };
 
+  const handleIPFSFileChange = (e) => {
+    console.log(e.target.files)
+    setFileToPin(e.target.files[0])
+  }
+
+  const handleUploadIPFS = async () => {
+    let apiKey = "2a7bbddb5e255f5539ee"
+    let apiSecretKey = "e0672966a87e1a831754cc3fffb846b9d40d4a6522553a55300b2f1f6a2ca477"
+    await pinFileToIPFS(apiKey, apiSecretKey, fileToPin)
+  }
+
+
+  const drawUploadIPFSPaper = () => {
+    return (
+      <Paper elevation={3} className={classes.paper}>
+        <Typography className={classes.paperTitle}>
+          Upload to IPFS
+        </Typography>
+        <FormControl fullWidth style={{ marginBottom: 12 }}>
+          <TextField
+            placeholder="Enter title..."
+            variant="outlined"
+            onChange={(e) => handleTitleChange(e)}  // todo
+          />
+          <TextField
+            placeholder="Enter description..."
+            variant="outlined"
+            onChange={(e) => handleTitleChange(e)}  // todo
+          />
+          <TextField
+            name="upload-asset"
+            placeholder="Upload Music"
+            type="file" 
+            onChange={(e) => handleIPFSFileChange(e)}
+          />
+        </FormControl>
+
+        <Button
+        fullWidth
+        variant="contained"
+        onClick={handleUploadIPFS}
+        color="primary"
+        style={{ color: "white" }}>
+          Upload
+        </Button>
+      </Paper>
+    )
+  }
+
   return (
     <div>
       <Grid container justify="center" spacing={3}>
@@ -277,6 +329,11 @@ const ContractPlayground = () => {
                   View My Licenses
                 </Button>
               </Paper>
+            </Grid>
+          </Grid>
+          <Grid container justify="center" direction="row" spacing={3}>
+            <Grid item xs={12} md={6}>
+              {drawUploadIPFSPaper()}
             </Grid>
           </Grid>
         </Grid>
