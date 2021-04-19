@@ -2,11 +2,14 @@ import React, { useEffect, useState } from "react";
 import Grid from "@material-ui/core/Grid";
 import Paper from "@material-ui/core/Paper";
 import { makeStyles } from "@material-ui/core/styles";
-import { Button, Typography } from "@material-ui/core";
+import { Button, Typography, CircularProgress, Box } from "@material-ui/core";
 import Web3 from "web3";
 import BlockBeats from "../contracts/Blockbeats.json";
 import TextField from "@material-ui/core/TextField";
 import FormControl from "@material-ui/core/FormControl";
+import { pinFileToIPFS, pinListingToIPFS } from "./pinataAPI";
+import ReactAudioPlayer from "react-audio-player";
+import axios from "axios";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -37,6 +40,22 @@ const ContractPlayground = () => {
 
   const [myLicenses, setMyLicenses] = useState([]);
 
+  const [titleToPin, setTitleToPin] = useState("null");
+  const [descriptionToPin, setDescriptionToPin] = useState("null");
+  const [musicFileToPin, setMusicFileToPin] = useState(null);
+  const [imageFileToPin, setImageFileToPin] = useState(null);
+  const [listingIPFSHashResult, setlistingIPFSHashResult] = useState("null");
+  const [uploadPending, setUploadPending] = useState(false);
+
+  const [IPFSToResolve, setIPFSToResolve] = useState(null);
+  const [resolvedTitle, setResolvedTitle] = useState(null);
+  const [resolvedDesc, setResolvedDesc] = useState(null);
+  const [resolvedMusic, setResolvedMusic] = useState(null);
+  const [resolvedImage, setResolvedImage] = useState(null);
+
+  const rootIPFSGateway = "https://ipfs.io/ipfs/"
+
+  /******************* BOOTSTRAPPING *****************/
   useEffect(() => {
     if (!window.web3) {
       setInvalidNetWork(true);
@@ -77,7 +96,9 @@ const ContractPlayground = () => {
       setLoading(false);
     }
   };
+  /******************************************************/
 
+  /******************** CREATE LISTING **********************/
   const handleTitleChange = (event) => {
     setTitle(event.target.value);
   };
@@ -88,10 +109,6 @@ const ContractPlayground = () => {
 
   const handlePriceChange = (event) => {
     setPrice(Number(event.target.value));
-  };
-
-  const handleBuyIDChange = (event) => {
-    setBuyingID(Number(event.target.value));
   };
 
   const drawListingInputFields = () => {
@@ -116,19 +133,27 @@ const ContractPlayground = () => {
     );
   };
 
-  const handleViewListings = async () => {
-    console.log("view listings");
-    const listingsRet = await contract.methods.viewListings().call();
-    console.log(listingsRet);
-    setListings(listingsRet);
-  };
-
   const handleCreateListing = async () => {
     console.log("create listing");
     let result = await contract.methods
       .createListing(title, price, URI)
       .send({ from: account });
     console.log(result);
+  };
+  /******************************************************/
+
+  /****************** VIEW LISTINGS *********************/
+  const handleViewListings = async () => {
+    console.log("view listings");
+    const listingsRet = await contract.methods.viewListings().call();
+    console.log(listingsRet);
+    setListings(listingsRet);
+  };
+  /******************************************************/
+
+  /***************** BUY LICENSE ********************/
+  const handleBuyIDChange = (event) => {
+    setBuyingID(Number(event.target.value));
   };
 
   const handleBuyListing = async () => {
@@ -138,6 +163,16 @@ const ContractPlayground = () => {
       .buyListing(buyingID)
       .send({ from: account, value: listingPrice });
   };
+
+  const getPriceOfListing = (id) => {
+    return Number(
+      listings.filter((item) => Number(item["id"]) === id)[0]["price"]
+    );
+  };
+
+  /******************************************************/
+
+  /************** VIEW LICENSES *******************/
 
   const handleGetLicenses = async () => {
     console.log("get license");
@@ -156,11 +191,171 @@ const ContractPlayground = () => {
     setMyLicenses(licenses);
   };
 
-  const getPriceOfListing = (id) => {
-    return Number(
-      listings.filter((item) => Number(item["id"]) === id)[0]["price"]
+  /******************************************************/
+
+  /************** IPFS UPLOAD ***********************/
+
+  const handleIPFSTitleChange = (e) => {
+    setTitleToPin(e.target.value);
+  };
+  const handleIPFSDescriptionChange = (e) => {
+    setDescriptionToPin(e.target.value);
+  };
+
+  const handleIPFSMusicFileChange = (e) => {
+    console.log(e.target.files);
+    setMusicFileToPin(e.target.files[0]);
+  };
+
+  const handleIPFSImageFileChange = (e) => {
+    console.log(e.target.files);
+    setImageFileToPin(e.target.files[0]);
+  };
+
+  const onUploadSuccess = (ipfsHash) => {
+    console.log("uploadsuccess");
+    setlistingIPFSHashResult(ipfsHash);
+    setUploadPending(false);
+  };
+
+  const handleUploadIPFS = async () => {
+    setUploadPending(true);
+    let apiKey = "2a7bbddb5e255f5539ee";
+    let apiSecretKey =
+      "e0672966a87e1a831754cc3fffb846b9d40d4a6522553a55300b2f1f6a2ca477";
+
+    let resultPost = pinListingToIPFS(
+      apiKey,
+      apiSecretKey,
+      musicFileToPin,
+      imageFileToPin,
+      titleToPin,
+      descriptionToPin,
+      onUploadSuccess
     );
   };
+
+  const drawUploadIPFSPaper = () => {
+    if (uploadPending) {
+      return (
+        <Paper elevation={3} className={classes.paper}>
+          <Box
+            display="flex"
+            flexDirection="column"
+            alignItems="center"
+            justifyItems="center"
+          >
+            <CircularProgress style={{ margin: "auto" }} />
+            <Typography>Uploading to IPFS...</Typography>
+          </Box>
+        </Paper>
+      );
+    }
+    // else
+    return (
+      <Paper elevation={3} className={classes.paper}>
+        <Typography className={classes.paperTitle}>Upload to IPFS</Typography>
+        <FormControl fullWidth style={{ marginBottom: 12 }}>
+          <TextField
+            placeholder="Enter title..."
+            variant="outlined"
+            onChange={(e) => handleIPFSTitleChange(e)} // todo
+          />
+          <TextField
+            placeholder="Enter description..."
+            variant="outlined"
+            onChange={(e) => handleIPFSDescriptionChange(e)}
+          />
+          Upload Sample
+          <TextField
+            name="upload-music"
+            placeholder="Upload Music"
+            type="file"
+            onChange={(e) => handleIPFSMusicFileChange(e)}
+          />
+          Upload Art Work
+          <TextField
+            name="upload-asset"
+            placeholder="Upload Music"
+            type="file"
+            onChange={(e) => handleIPFSImageFileChange(e)}
+          />
+        </FormControl>
+
+        <Button
+          fullWidth
+          variant="contained"
+          onClick={handleUploadIPFS}
+          color="primary"
+          style={{ color: "white" }}
+        >
+          Upload
+        </Button>
+
+        <Typography>
+          <b>IPFS Hash Result: </b>
+          {listingIPFSHashResult}
+        </Typography>
+      </Paper>
+    );
+  };
+  /******************************************************/
+
+  /*************** RESOLVE IPFS *********************/
+  const handleIPFSHashResolveChange = (e) => {
+    setIPFSToResolve(e.target.value);
+  };
+
+  const handleResolveIPFS = () => {
+    let jsonUrl = rootIPFSGateway + IPFSToResolve
+    axios.get(jsonUrl)
+      .then(function(response) {
+        setResolvedTitle(response.data.title)
+        setResolvedDesc(response.data.description)
+        setResolvedImage(rootIPFSGateway + response.data.imageURI)
+        setResolvedMusic(rootIPFSGateway + response.data.musicURI)
+      })
+  };
+
+  const drawIPFSResolvePaper = () => {
+    return (
+      <Paper elevation={3} className={classes.paper}>
+        <Typography className={classes.paperTitle}>
+          Resolve Listing IPFS Hash
+        </Typography>
+        <FormControl fullWidth style={{ marginBottom: 12 }}>
+          <TextField
+            placeholder="Enter IPFS Hash..."
+            variant="outlined"
+            onChange={(e) => handleIPFSHashResolveChange(e)}
+          />
+        </FormControl>
+        <Button
+          fullWidth
+          variant="contained"
+          onClick={handleResolveIPFS}
+          color="primary"
+          style={{ color: "white" }}
+        >
+          Resolve
+        </Button>
+        <Typography>
+          <b>Title: </b> {resolvedTitle}
+        </Typography>
+        <Typography>
+          <b>Description: </b> {resolvedDesc}
+        </Typography>
+        <img
+          src= {resolvedImage}
+        />
+        <ReactAudioPlayer
+          src= {resolvedMusic}
+          controls
+        />
+      </Paper>
+    );
+  };
+  /******************************************************/
 
   return (
     <div>
@@ -178,7 +373,8 @@ const ContractPlayground = () => {
                   variant="contained"
                   onClick={handleCreateListing}
                   color="primary"
-                  style={{ color: "white" }}>
+                  style={{ color: "white" }}
+                >
                   Create Listing
                 </Button>
               </Paper>
@@ -212,7 +408,8 @@ const ContractPlayground = () => {
                   variant="contained"
                   onClick={handleViewListings}
                   color="primary"
-                  style={{ color: "white" }}>
+                  style={{ color: "white" }}
+                >
                   View Listings
                 </Button>
               </Paper>
@@ -236,7 +433,8 @@ const ContractPlayground = () => {
                   variant="contained"
                   onClick={handleBuyListing}
                   color="primary"
-                  style={{ color: "white" }}>
+                  style={{ color: "white" }}
+                >
                   Buy License
                 </Button>
               </Paper>
@@ -273,10 +471,19 @@ const ContractPlayground = () => {
                   variant="contained"
                   onClick={handleGetLicenses}
                   color="primary"
-                  style={{ color: "white" }}>
+                  style={{ color: "white" }}
+                >
                   View My Licenses
                 </Button>
               </Paper>
+            </Grid>
+          </Grid>
+          <Grid container justify="center" direction="row" spacing={3}>
+            <Grid item xs={12} md={6}>
+              {drawUploadIPFSPaper()}
+            </Grid>
+            <Grid item xs={12} md={6}>
+              {drawIPFSResolvePaper()}
             </Grid>
           </Grid>
         </Grid>
