@@ -8,6 +8,8 @@ import BlockBeats from "../contracts/Blockbeats.json";
 import TextField from "@material-ui/core/TextField";
 import FormControl from "@material-ui/core/FormControl";
 import { pinFileToIPFS, pinListingToIPFS } from "./pinataAPI";
+import ReactAudioPlayer from "react-audio-player";
+import axios from "axios";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -45,6 +47,15 @@ const ContractPlayground = () => {
   const [listingIPFSHashResult, setlistingIPFSHashResult] = useState("null");
   const [uploadPending, setUploadPending] = useState(false);
 
+  const [IPFSToResolve, setIPFSToResolve] = useState(null);
+  const [resolvedTitle, setResolvedTitle] = useState(null);
+  const [resolvedDesc, setResolvedDesc] = useState(null);
+  const [resolvedMusic, setResolvedMusic] = useState(null);
+  const [resolvedImage, setResolvedImage] = useState(null);
+
+  const rootIPFSGateway = "https://ipfs.io/ipfs/"
+
+  /******************* BOOTSTRAPPING *****************/
   useEffect(() => {
     if (!window.web3) {
       setInvalidNetWork(true);
@@ -85,7 +96,9 @@ const ContractPlayground = () => {
       setLoading(false);
     }
   };
+  /******************************************************/
 
+  /******************** CREATE LISTING **********************/
   const handleTitleChange = (event) => {
     setTitle(event.target.value);
   };
@@ -96,10 +109,6 @@ const ContractPlayground = () => {
 
   const handlePriceChange = (event) => {
     setPrice(Number(event.target.value));
-  };
-
-  const handleBuyIDChange = (event) => {
-    setBuyingID(Number(event.target.value));
   };
 
   const drawListingInputFields = () => {
@@ -124,19 +133,27 @@ const ContractPlayground = () => {
     );
   };
 
-  const handleViewListings = async () => {
-    console.log("view listings");
-    const listingsRet = await contract.methods.viewListings().call();
-    console.log(listingsRet);
-    setListings(listingsRet);
-  };
-
   const handleCreateListing = async () => {
     console.log("create listing");
     let result = await contract.methods
       .createListing(title, price, URI)
       .send({ from: account });
     console.log(result);
+  };
+  /******************************************************/
+
+  /****************** VIEW LISTINGS *********************/
+  const handleViewListings = async () => {
+    console.log("view listings");
+    const listingsRet = await contract.methods.viewListings().call();
+    console.log(listingsRet);
+    setListings(listingsRet);
+  };
+  /******************************************************/
+
+  /***************** BUY LICENSE ********************/
+  const handleBuyIDChange = (event) => {
+    setBuyingID(Number(event.target.value));
   };
 
   const handleBuyListing = async () => {
@@ -146,6 +163,16 @@ const ContractPlayground = () => {
       .buyListing(buyingID)
       .send({ from: account, value: listingPrice });
   };
+
+  const getPriceOfListing = (id) => {
+    return Number(
+      listings.filter((item) => Number(item["id"]) === id)[0]["price"]
+    );
+  };
+
+  /******************************************************/
+
+  /************** VIEW LICENSES *******************/
 
   const handleGetLicenses = async () => {
     console.log("get license");
@@ -164,11 +191,9 @@ const ContractPlayground = () => {
     setMyLicenses(licenses);
   };
 
-  const getPriceOfListing = (id) => {
-    return Number(
-      listings.filter((item) => Number(item["id"]) === id)[0]["price"]
-    );
-  };
+  /******************************************************/
+
+  /************** IPFS UPLOAD ***********************/
 
   const handleIPFSTitleChange = (e) => {
     setTitleToPin(e.target.value);
@@ -190,11 +215,11 @@ const ContractPlayground = () => {
   const onUploadSuccess = (ipfsHash) => {
     console.log("uploadsuccess");
     setlistingIPFSHashResult(ipfsHash);
-    setUploadPending(false)
+    setUploadPending(false);
   };
 
   const handleUploadIPFS = async () => {
-    setUploadPending(true)
+    setUploadPending(true);
     let apiKey = "2a7bbddb5e255f5539ee";
     let apiSecretKey =
       "e0672966a87e1a831754cc3fffb846b9d40d4a6522553a55300b2f1f6a2ca477";
@@ -208,22 +233,24 @@ const ContractPlayground = () => {
       descriptionToPin,
       onUploadSuccess
     );
-    // resultPost.then(function (response) {
-    //   console.log(response)
-    //   setlistingIPFSHashResult(response.data.IpfsHash)
-    // })
   };
 
   const drawUploadIPFSPaper = () => {
     if (uploadPending) {
       return (
         <Paper elevation={3} className={classes.paper}>
-          <Box display="flex" flexDirection="column" alignItems="center" justifyItems="center">
+          <Box
+            display="flex"
+            flexDirection="column"
+            alignItems="center"
+            justifyItems="center"
+          >
             <CircularProgress style={{ margin: "auto" }} />
+            <Typography>Uploading to IPFS...</Typography>
           </Box>
         </Paper>
       );
-    } 
+    }
     // else
     return (
       <Paper elevation={3} className={classes.paper}>
@@ -272,6 +299,63 @@ const ContractPlayground = () => {
       </Paper>
     );
   };
+  /******************************************************/
+
+  /*************** RESOLVE IPFS *********************/
+  const handleIPFSHashResolveChange = (e) => {
+    setIPFSToResolve(e.target.value);
+  };
+
+  const handleResolveIPFS = () => {
+    let jsonUrl = rootIPFSGateway + IPFSToResolve
+    axios.get(jsonUrl)
+      .then(function(response) {
+        setResolvedTitle(response.data.title)
+        setResolvedDesc(response.data.description)
+        setResolvedImage(rootIPFSGateway + response.data.imageURI)
+        setResolvedMusic(rootIPFSGateway + response.data.musicURI)
+      })
+  };
+
+  const drawIPFSResolvePaper = () => {
+    return (
+      <Paper elevation={3} className={classes.paper}>
+        <Typography className={classes.paperTitle}>
+          Resolve Listing IPFS Hash
+        </Typography>
+        <FormControl fullWidth style={{ marginBottom: 12 }}>
+          <TextField
+            placeholder="Enter IPFS Hash..."
+            variant="outlined"
+            onChange={(e) => handleIPFSHashResolveChange(e)}
+          />
+        </FormControl>
+        <Button
+          fullWidth
+          variant="contained"
+          onClick={handleResolveIPFS}
+          color="primary"
+          style={{ color: "white" }}
+        >
+          Resolve
+        </Button>
+        <Typography>
+          <b>Title: </b> {resolvedTitle}
+        </Typography>
+        <Typography>
+          <b>Description: </b> {resolvedDesc}
+        </Typography>
+        <img
+          src= {resolvedImage}
+        />
+        <ReactAudioPlayer
+          src= {resolvedMusic}
+          controls
+        />
+      </Paper>
+    );
+  };
+  /******************************************************/
 
   return (
     <div>
@@ -397,6 +481,9 @@ const ContractPlayground = () => {
           <Grid container justify="center" direction="row" spacing={3}>
             <Grid item xs={12} md={6}>
               {drawUploadIPFSPaper()}
+            </Grid>
+            <Grid item xs={12} md={6}>
+              {drawIPFSResolvePaper()}
             </Grid>
           </Grid>
         </Grid>
