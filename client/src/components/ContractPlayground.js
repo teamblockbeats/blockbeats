@@ -2,12 +2,12 @@ import React, { useEffect, useState } from "react";
 import Grid from "@material-ui/core/Grid";
 import Paper from "@material-ui/core/Paper";
 import { makeStyles } from "@material-ui/core/styles";
-import { Button, Typography } from "@material-ui/core";
+import { Button, Typography, CircularProgress, Box } from "@material-ui/core";
 import Web3 from "web3";
 import BlockBeats from "../contracts/Blockbeats.json";
 import TextField from "@material-ui/core/TextField";
 import FormControl from "@material-ui/core/FormControl";
-import { pinFileToIPFS } from "./pinataAPI";
+import { pinFileToIPFS, pinListingToIPFS } from "./pinataAPI";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -38,7 +38,12 @@ const ContractPlayground = () => {
 
   const [myLicenses, setMyLicenses] = useState([]);
 
-  const [fileToPin, setFileToPin] = useState(null)
+  const [titleToPin, setTitleToPin] = useState("null");
+  const [descriptionToPin, setDescriptionToPin] = useState("null");
+  const [musicFileToPin, setMusicFileToPin] = useState(null);
+  const [imageFileToPin, setImageFileToPin] = useState(null);
+  const [listingIPFSHashResult, setlistingIPFSHashResult] = useState("null");
+  const [uploadPending, setUploadPending] = useState(false);
 
   useEffect(() => {
     if (!window.web3) {
@@ -165,54 +170,108 @@ const ContractPlayground = () => {
     );
   };
 
-  const handleIPFSFileChange = (e) => {
-    console.log(e.target.files)
-    setFileToPin(e.target.files[0])
-  }
+  const handleIPFSTitleChange = (e) => {
+    setTitleToPin(e.target.value);
+  };
+  const handleIPFSDescriptionChange = (e) => {
+    setDescriptionToPin(e.target.value);
+  };
+
+  const handleIPFSMusicFileChange = (e) => {
+    console.log(e.target.files);
+    setMusicFileToPin(e.target.files[0]);
+  };
+
+  const handleIPFSImageFileChange = (e) => {
+    console.log(e.target.files);
+    setImageFileToPin(e.target.files[0]);
+  };
+
+  const onUploadSuccess = (ipfsHash) => {
+    console.log("uploadsuccess");
+    setlistingIPFSHashResult(ipfsHash);
+    setUploadPending(false)
+  };
 
   const handleUploadIPFS = async () => {
-    let apiKey = "2a7bbddb5e255f5539ee"
-    let apiSecretKey = "e0672966a87e1a831754cc3fffb846b9d40d4a6522553a55300b2f1f6a2ca477"
-    await pinFileToIPFS(apiKey, apiSecretKey, fileToPin)
-  }
+    setUploadPending(true)
+    let apiKey = "2a7bbddb5e255f5539ee";
+    let apiSecretKey =
+      "e0672966a87e1a831754cc3fffb846b9d40d4a6522553a55300b2f1f6a2ca477";
 
+    let resultPost = pinListingToIPFS(
+      apiKey,
+      apiSecretKey,
+      musicFileToPin,
+      imageFileToPin,
+      titleToPin,
+      descriptionToPin,
+      onUploadSuccess
+    );
+    // resultPost.then(function (response) {
+    //   console.log(response)
+    //   setlistingIPFSHashResult(response.data.IpfsHash)
+    // })
+  };
 
   const drawUploadIPFSPaper = () => {
+    if (uploadPending) {
+      return (
+        <Paper elevation={3} className={classes.paper}>
+          <Box display="flex" flexDirection="column" alignItems="center" justifyItems="center">
+            <CircularProgress style={{ margin: "auto" }} />
+          </Box>
+        </Paper>
+      );
+    } 
+    // else
     return (
       <Paper elevation={3} className={classes.paper}>
-        <Typography className={classes.paperTitle}>
-          Upload to IPFS
-        </Typography>
+        <Typography className={classes.paperTitle}>Upload to IPFS</Typography>
         <FormControl fullWidth style={{ marginBottom: 12 }}>
           <TextField
             placeholder="Enter title..."
             variant="outlined"
-            onChange={(e) => handleTitleChange(e)}  // todo
+            onChange={(e) => handleIPFSTitleChange(e)} // todo
           />
           <TextField
             placeholder="Enter description..."
             variant="outlined"
-            onChange={(e) => handleTitleChange(e)}  // todo
+            onChange={(e) => handleIPFSDescriptionChange(e)}
           />
+          Upload Sample
+          <TextField
+            name="upload-music"
+            placeholder="Upload Music"
+            type="file"
+            onChange={(e) => handleIPFSMusicFileChange(e)}
+          />
+          Upload Art Work
           <TextField
             name="upload-asset"
             placeholder="Upload Music"
-            type="file" 
-            onChange={(e) => handleIPFSFileChange(e)}
+            type="file"
+            onChange={(e) => handleIPFSImageFileChange(e)}
           />
         </FormControl>
 
         <Button
-        fullWidth
-        variant="contained"
-        onClick={handleUploadIPFS}
-        color="primary"
-        style={{ color: "white" }}>
+          fullWidth
+          variant="contained"
+          onClick={handleUploadIPFS}
+          color="primary"
+          style={{ color: "white" }}
+        >
           Upload
         </Button>
+
+        <Typography>
+          <b>IPFS Hash Result: </b>
+          {listingIPFSHashResult}
+        </Typography>
       </Paper>
-    )
-  }
+    );
+  };
 
   return (
     <div>
@@ -230,7 +289,8 @@ const ContractPlayground = () => {
                   variant="contained"
                   onClick={handleCreateListing}
                   color="primary"
-                  style={{ color: "white" }}>
+                  style={{ color: "white" }}
+                >
                   Create Listing
                 </Button>
               </Paper>
@@ -264,7 +324,8 @@ const ContractPlayground = () => {
                   variant="contained"
                   onClick={handleViewListings}
                   color="primary"
-                  style={{ color: "white" }}>
+                  style={{ color: "white" }}
+                >
                   View Listings
                 </Button>
               </Paper>
@@ -288,7 +349,8 @@ const ContractPlayground = () => {
                   variant="contained"
                   onClick={handleBuyListing}
                   color="primary"
-                  style={{ color: "white" }}>
+                  style={{ color: "white" }}
+                >
                   Buy License
                 </Button>
               </Paper>
@@ -325,7 +387,8 @@ const ContractPlayground = () => {
                   variant="contained"
                   onClick={handleGetLicenses}
                   color="primary"
-                  style={{ color: "white" }}>
+                  style={{ color: "white" }}
+                >
                   View My Licenses
                 </Button>
               </Paper>
