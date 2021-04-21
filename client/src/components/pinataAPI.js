@@ -68,11 +68,14 @@ export const pinListingToIPFS = (
           console.log("imageHash");
           console.log(imageHash);
 
+          /** JSON structure derived from opensea standard, see:
+           *    https://docs.opensea.io/docs/metadata-standards#section-metadata-structure 
+           **/
           let JSONBody = {
-            title: title,
+            name: title,
             description: description,
-            musicURI: musicHash,
-            imageURI: imageHash,
+            animation_url: "ipfs://" + musicHash,
+            image: "ipfs://" + imageHash,
           };
           axios
             .post(jsonUrl, JSONBody, {
@@ -80,7 +83,7 @@ export const pinListingToIPFS = (
                 pinata_api_key: pinataApiKey,
                 pinata_secret_api_key: pinataSecretApiKey,
               },
-            }).then(function (response) {onSuccess(response.data.IpfsHash)})
+            }).then(function (response) {onSuccess("ipfs://" + response.data.IpfsHash)})
         })
     })
 }

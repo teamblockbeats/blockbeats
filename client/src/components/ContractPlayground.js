@@ -44,7 +44,7 @@ const ContractPlayground = () => {
   const [descriptionToPin, setDescriptionToPin] = useState("null");
   const [musicFileToPin, setMusicFileToPin] = useState(null);
   const [imageFileToPin, setImageFileToPin] = useState(null);
-  const [listingIPFSHashResult, setlistingIPFSHashResult] = useState("null");
+  const [listingIPFSUrlResult, setlistingIPFSUrlResult] = useState("null");
   const [uploadPending, setUploadPending] = useState(false);
 
   const [IPFSToResolve, setIPFSToResolve] = useState(null);
@@ -83,7 +83,7 @@ const ContractPlayground = () => {
 
     // Check correct network
     const networkId = await web3.eth.net.getId();
-    if (networkId !== 5777) {
+    if (networkId !== 5777 && networkId !== 4) {
       setInvalidNetWork(true);
       setLoading(false);
     } else {
@@ -212,9 +212,9 @@ const ContractPlayground = () => {
     setImageFileToPin(e.target.files[0]);
   };
 
-  const onUploadSuccess = (ipfsHash) => {
+  const onUploadSuccess = (ipfsUrl) => {
     console.log("uploadsuccess");
-    setlistingIPFSHashResult(ipfsHash);
+    setlistingIPFSUrlResult(ipfsUrl);
     setUploadPending(false);
   };
 
@@ -293,8 +293,8 @@ const ContractPlayground = () => {
         </Button>
 
         <Typography>
-          <b>IPFS Hash Result: </b>
-          {listingIPFSHashResult}
+          <b>IPFS URL Result: </b>
+          {listingIPFSUrlResult}
         </Typography>
       </Paper>
     );
@@ -305,15 +305,23 @@ const ContractPlayground = () => {
   const handleIPFSHashResolveChange = (e) => {
     setIPFSToResolve(e.target.value);
   };
+  
+  const removePrefix = (str, prefix) => {
+    if (str.startsWith(prefix)) {
+      return str.slice(prefix.length)
+    } else {
+      return str
+    }
+  }
 
   const handleResolveIPFS = () => {
-    let jsonUrl = rootIPFSGateway + IPFSToResolve
+    let jsonUrl = rootIPFSGateway + (removePrefix(IPFSToResolve, "ipfs://"))
     axios.get(jsonUrl)
       .then(function(response) {
-        setResolvedTitle(response.data.title)
+        setResolvedTitle(response.data.name)
         setResolvedDesc(response.data.description)
-        setResolvedImage(rootIPFSGateway + response.data.imageURI)
-        setResolvedMusic(rootIPFSGateway + response.data.musicURI)
+        setResolvedImage(rootIPFSGateway + removePrefix(response.data.image, "ipfs://"))
+        setResolvedMusic(rootIPFSGateway + removePrefix(response.data.animation_url, "ipfs://"))
       })
   };
 
@@ -321,11 +329,11 @@ const ContractPlayground = () => {
     return (
       <Paper elevation={3} className={classes.paper}>
         <Typography className={classes.paperTitle}>
-          Resolve Listing IPFS Hash
+          Resolve Listing IPFS URL
         </Typography>
         <FormControl fullWidth style={{ marginBottom: 12 }}>
           <TextField
-            placeholder="Enter IPFS Hash..."
+            placeholder="Enter IPFS URL..."
             variant="outlined"
             onChange={(e) => handleIPFSHashResolveChange(e)}
           />

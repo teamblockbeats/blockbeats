@@ -32,7 +32,7 @@ const App = () => {
       });
 
       web.eth.net.getId().then((id) => {
-        if (id != 5777) {
+    if (id !== 5777 && id !== 4) {
           setInvalidNetWork(true);
         }
       });
