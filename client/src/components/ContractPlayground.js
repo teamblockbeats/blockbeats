@@ -232,7 +232,7 @@ const ContractPlayground = () => {
       titleToPin,
       descriptionToPin,
       {},
-      null,
+      ((_) => {}),
       onUploadSuccess
     );
   };
