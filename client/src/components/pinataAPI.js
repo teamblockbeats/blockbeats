@@ -19,6 +19,15 @@ export const pinFileToIPFS = (pinataApiKey, pinataSecretApiKey, file) => {
   });
 };
 
+const attributesToJSON = (attrDict) => {
+  var attrList = [];
+  Object.keys(attrDict).forEach((key) => {
+    attrList = attrList.concat({ trait_type: key, value: attrDict[key] });
+  });
+
+  return attrList;
+};
+
 export const pinListingToIPFS = (
   pinataApiKey,
   pinataSecretApiKey,
@@ -26,6 +35,7 @@ export const pinListingToIPFS = (
   imageFile,
   title,
   description,
+  attributes,
   onStatus,
   onSuccess
 ) => {
@@ -83,6 +93,7 @@ export const pinListingToIPFS = (
             description: description,
             animation_url: "ipfs://" + musicHash,
             image: "ipfs://" + imageHash,
+            attributes: attributesToJSON(attributes)
           };
           axios
             .post(jsonUrl, JSONBody, {
@@ -92,18 +103,20 @@ export const pinListingToIPFS = (
               },
             })
             .then(function (response) {
-              onStatus("Done!");
               onSuccess("ipfs://" + response.data.IpfsHash);
             })
-            .catch(() => {
+            .catch((error) => {
+              console.log(error)
               onStatus("Failed");
             });
         })
-        .catch(() => {
+        .catch((error) => {
+          console.log(error)
           onStatus("Failed");
         });
     })
-    .catch(() => {
+    .catch((error) => {
+      console.log(error)
       onStatus("Failed");
     });
 };

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
 import Paper from "@material-ui/core/Paper";
@@ -12,6 +12,9 @@ import {
   CircularProgress,
 } from "@material-ui/core";
 import { pinListingToIPFS } from "./pinataAPI";
+import Web3 from "web3";
+import BlockBeats from "../contracts/Blockbeats.json";
+
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -28,6 +31,9 @@ const useStyles = makeStyles((theme) => ({
 const Upload = () => {
   const classes = useStyles();
 
+  const [account, setAccount] = useState(null);
+  const [contract, setContract] = useState(null);
+
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState(0);
@@ -40,6 +46,46 @@ const Upload = () => {
   const [artFile, setArtFile] = useState(null);
 
   const [loadingStatus, setLoadingStatus] = useState(undefined);
+
+
+    /******************* BOOTSTRAPPING *****************/
+    useEffect(() => {
+      if (!window.web3) {
+      } else {
+        loadWeb3();
+        loadBlockChainData();
+      }
+    }, []);
+  
+    const loadWeb3 = async () => {
+      if (window.ethereum) {
+        window.web3 = new Web3(window.ethereum);
+        await window.ethereum.enable();
+      } else if (window.web3) {
+        window.web3 = new Web3(window.web3.currentProvider);
+      }
+    };
+  
+    const loadBlockChainData = async () => {
+      const web3 = window.web3;
+  
+      // Use web3 to get the user's accounts.
+      const accounts = await web3.eth.getAccounts();
+      setAccount(accounts[0]);
+  
+      // Check correct network
+      const networkId = await web3.eth.net.getId();
+      if (networkId !== 5777 && networkId !== 4) {
+      } else {
+        const deployedNetwork = BlockBeats.networks[networkId];
+        const instance = new web3.eth.Contract(
+          BlockBeats.abi,
+          deployedNetwork.address
+        );
+        setContract(instance);
+      }
+    };
+    /******************************************************/
 
   /************* HANDLERS ******************/
   const handleTitleChange = (event) => {
@@ -75,8 +121,14 @@ const Upload = () => {
   };
   /***************************************/
 
-  const onIpfsSuccess = (ipfsURI) => {
-    console.log(onIpfsSuccess);
+  const onIpfsSuccess = async(ipfsURI) => {
+    console.log(ipfsURI);
+    setLoadingStatus("Submitting to Smart Contract...");
+    let result = await contract.methods
+      .createListing(title, price, ipfsURI)
+      .send({ from: account });
+    setLoadingStatus("Done!");
+    console.log(result);
   };
 
   const handleCreateListing = async () => {
@@ -92,6 +144,7 @@ const Upload = () => {
       artFile,
       title,
       description,
+      {genre: genre, language: language, BPM: BPM},
       (status) => {
         setLoadingStatus(status);
       },
