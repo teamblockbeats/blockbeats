@@ -19,6 +19,15 @@ export const pinFileToIPFS = (pinataApiKey, pinataSecretApiKey, file) => {
   });
 };
 
+const attributesToJSON = (attrDict) => {
+  var attrList = [];
+  Object.keys(attrDict).forEach((key) => {
+    attrList = attrList.concat({ trait_type: key, value: attrDict[key] });
+  });
+
+  return attrList;
+};
+
 export const pinListingToIPFS = (
   pinataApiKey,
   pinataSecretApiKey,
@@ -26,6 +35,8 @@ export const pinListingToIPFS = (
   imageFile,
   title,
   description,
+  attributes,
+  onStatus,
   onSuccess
 ) => {
   const fileUrl = `https://api.pinata.cloud/pinning/pinFileToIPFS`;
@@ -39,6 +50,8 @@ export const pinListingToIPFS = (
 
   let imageData = new FormData();
   imageData.append("file", imageFile);
+
+  onStatus("Uploading Music to IPFS...");
 
   axios
     .post(fileUrl, musicData, {
@@ -54,6 +67,8 @@ export const pinListingToIPFS = (
       console.log("musicHash");
       console.log(musicHash);
 
+      onStatus("Uploading Art to IPFS...");
+
       axios
         .post(fileUrl, imageData, {
           maxBodyLength: "Infinity", //this is needed to prevent axios from erroring out with large files
@@ -68,14 +83,17 @@ export const pinListingToIPFS = (
           console.log("imageHash");
           console.log(imageHash);
 
+          onStatus("Uploading Metadata to IPFS...");
+
           /** JSON structure derived from opensea standard, see:
-           *    https://docs.opensea.io/docs/metadata-standards#section-metadata-structure 
+           *    https://docs.opensea.io/docs/metadata-standards#section-metadata-structure
            **/
           let JSONBody = {
             name: title,
             description: description,
             animation_url: "ipfs://" + musicHash,
             image: "ipfs://" + imageHash,
+            attributes: attributesToJSON(attributes)
           };
           axios
             .post(jsonUrl, JSONBody, {
@@ -83,7 +101,22 @@ export const pinListingToIPFS = (
                 pinata_api_key: pinataApiKey,
                 pinata_secret_api_key: pinataSecretApiKey,
               },
-            }).then(function (response) {onSuccess("ipfs://" + response.data.IpfsHash)})
+            })
+            .then(function (response) {
+              onSuccess("ipfs://" + response.data.IpfsHash);
+            })
+            .catch((error) => {
+              console.log(error)
+              onStatus("Failed");
+            });
         })
+        .catch((error) => {
+          console.log(error)
+          onStatus("Failed");
+        });
     })
-}
+    .catch((error) => {
+      console.log(error)
+      onStatus("Failed");
+    });
+};

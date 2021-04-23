@@ -231,6 +231,8 @@ const ContractPlayground = () => {
       imageFileToPin,
       titleToPin,
       descriptionToPin,
+      {},
+      ((_) => {}),
       onUploadSuccess
     );
   };
