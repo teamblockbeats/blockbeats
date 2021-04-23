@@ -26,6 +26,7 @@ export const pinListingToIPFS = (
   imageFile,
   title,
   description,
+  onStatus,
   onSuccess
 ) => {
   const fileUrl = `https://api.pinata.cloud/pinning/pinFileToIPFS`;
@@ -39,6 +40,8 @@ export const pinListingToIPFS = (
 
   let imageData = new FormData();
   imageData.append("file", imageFile);
+
+  onStatus("Uploading Music to IPFS...");
 
   axios
     .post(fileUrl, musicData, {
@@ -54,6 +57,8 @@ export const pinListingToIPFS = (
       console.log("musicHash");
       console.log(musicHash);
 
+      onStatus("Uploading Art to IPFS...");
+
       axios
         .post(fileUrl, imageData, {
           maxBodyLength: "Infinity", //this is needed to prevent axios from erroring out with large files
@@ -68,8 +73,10 @@ export const pinListingToIPFS = (
           console.log("imageHash");
           console.log(imageHash);
 
+          onStatus("Uploading Metadata to IPFS...");
+
           /** JSON structure derived from opensea standard, see:
-           *    https://docs.opensea.io/docs/metadata-standards#section-metadata-structure 
+           *    https://docs.opensea.io/docs/metadata-standards#section-metadata-structure
            **/
           let JSONBody = {
             name: title,
@@ -83,7 +90,20 @@ export const pinListingToIPFS = (
                 pinata_api_key: pinataApiKey,
                 pinata_secret_api_key: pinataSecretApiKey,
               },
-            }).then(function (response) {onSuccess("ipfs://" + response.data.IpfsHash)})
+            })
+            .then(function (response) {
+              onStatus("Done!");
+              onSuccess("ipfs://" + response.data.IpfsHash);
+            })
+            .catch(() => {
+              onStatus("Failed");
+            });
         })
+        .catch(() => {
+          onStatus("Failed");
+        });
     })
-}
+    .catch(() => {
+      onStatus("Failed");
+    });
+};

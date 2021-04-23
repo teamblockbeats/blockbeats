@@ -9,7 +9,9 @@ import {
   Typography,
   Box,
   FormLabel,
+  CircularProgress,
 } from "@material-ui/core";
+import { pinListingToIPFS } from "./pinataAPI";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -36,6 +38,8 @@ const Upload = () => {
 
   const [musicFile, setMusicFile] = useState(null);
   const [artFile, setArtFile] = useState(null);
+
+  const [loadingStatus, setLoadingStatus] = useState(undefined);
 
   /************* HANDLERS ******************/
   const handleTitleChange = (event) => {
@@ -68,12 +72,31 @@ const Upload = () => {
 
   const handleArtFileChange = (event) => {
     setArtFile(event.target.files[0]);
-  }
+  };
   /***************************************/
+
+  const onIpfsSuccess = (ipfsURI) => {
+    console.log(onIpfsSuccess);
+  };
 
   const handleCreateListing = async () => {
     console.log("create listing");
+    let apiKey = "2a7bbddb5e255f5539ee";
+    let apiSecretKey =
+      "e0672966a87e1a831754cc3fffb846b9d40d4a6522553a55300b2f1f6a2ca477";
 
+    pinListingToIPFS(
+      apiKey,
+      apiSecretKey,
+      musicFile,
+      artFile,
+      title,
+      description,
+      (status) => {
+        setLoadingStatus(status);
+      },
+      onIpfsSuccess
+    );
   };
 
   const drawListingInputFields = () => {
@@ -101,10 +124,7 @@ const Upload = () => {
             flexGrow={1}
             paddingRight={3}
           >
-            <TextField
-              label="Genre"
-              onChange={(e) => handleGenreChange(e)}
-            />
+            <TextField label="Genre" onChange={(e) => handleGenreChange(e)} />
             <TextField
               label="Language"
               onChange={(e) => handleLanguageChange(e)}
@@ -116,10 +136,7 @@ const Upload = () => {
             flexGrow={1}
             paddingLeft={3}
           >
-            <TextField
-              label="BPM"
-              onChange={(e) => handleBPMChange(e)}
-            />
+            <TextField label="BPM" onChange={(e) => handleBPMChange(e)} />
           </Box>
         </Box>
         <Box
@@ -154,21 +171,44 @@ const Upload = () => {
     );
   };
 
+  const drawUploadButton = () => {
+    let stateText = loadingStatus;
+
+    if (stateText == "Done!" || stateText == "Failed") {
+      return (
+        <Box display="flex" justifyContent="center">
+          <Typography variant="h6">{stateText}</Typography>
+        </Box>
+      );
+    } else if (stateText) {
+      return (
+        <Box display="flex" justifyContent="center">
+          <CircularProgress />
+          <Typography variant="h6" style={{paddingLeft: 10, paddingTop: 4}}>{stateText}</Typography>
+        </Box>
+      );
+    } else {
+      return (
+        <Button
+          fullWidth
+          variant="contained"
+          onClick={handleCreateListing}
+          color="primary"
+          style={{ color: "white" }}
+        >
+          Create Listing
+        </Button>
+      );
+    }
+  };
+
   return (
     <Grid container justify="center" direction="row" spacing={3}>
       <Grid item xs={12} md={9}>
         <Paper elevation={3} className={classes.paper}>
           <Typography className={classes.paperTitle}>Create Listing</Typography>
           {drawListingInputFields()}
-          <Button
-            fullWidth
-            variant="contained"
-            onClick={handleCreateListing}
-            color="primary"
-            style={{ color: "white" }}
-          >
-            Create Listing
-          </Button>
+          {drawUploadButton()}
         </Paper>
       </Grid>
     </Grid>
