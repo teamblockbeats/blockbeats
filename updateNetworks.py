@@ -3,9 +3,17 @@ from collections import OrderedDict
 
 #   A python script to quickly update BlockBeats.json generated
 #   by truffle to include references to other networks contracts
-#   (e.g. rinkeby or matic). Update the info in the 'networks'
-#   object below and run this file AFTER your Blockbeats.json
-#   file has been generated/updated by truffle.
+#   (e.g. rinkeby or matic). 
+
+#### USAGE #####
+#   If you've deployed or redeployed on an external network -
+#   Update the info in the 'networks' object below and run this
+#   file AFTER your Blockbeats.json file has been generated/updated
+#   by truffle.
+
+#   If you're just wanting to use the most recent contract on one
+#   of the networks, just run this file to update your Blockbeats.json
+###############
 
 # ADD / UPDATE NETWORKS BELOW
 networks = [
