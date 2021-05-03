@@ -4,6 +4,8 @@ pragma solidity ^0.8.0;
 // ideally import with the below line, but i couldn't get it to work
 // import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 
+// ipfs://QmZCJ3M9ki4pW2wMJt7gpoLAuTyZhJ7Rj58kfpoTESv5ab
+
 import "./openzepplin/token/ERC721/ERC721.sol";
 
 contract Blockbeats is ERC721 {
@@ -74,6 +76,11 @@ contract Blockbeats is ERC721 {
     /****************************/
 
     /***** ERC721 extensions ****/
+
+    // https://docs.opensea.io/docs/contract-level-metadata
+    function contractURI() public pure returns (string memory) {
+        return "ipfs://QmZCJ3M9ki4pW2wMJt7gpoLAuTyZhJ7Rj58kfpoTESv5ab";
+    }
 
     function mint(string memory tokenURI_) private {
         _mint(msg.sender, numTokens);
