@@ -9,6 +9,7 @@ import Header from "./components/Header";
 import Licenses from "./components/Licenses";
 import Upload from "./components/Upload";
 import Listings from "./components/Listings";
+import Verify from "./components/Verify";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -58,6 +59,9 @@ const App = () => {
         </Route>
         <Route path="/licenses">
           <Licenses />
+        </Route>
+        <Route path="/verify">
+          <Verify />
         </Route>
         <Route exact path="/">
           <Listings web3={web3} accounts={accounts} />

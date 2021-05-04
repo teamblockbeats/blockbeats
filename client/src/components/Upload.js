@@ -10,11 +10,13 @@ import {
   Box,
   FormLabel,
   CircularProgress,
+  InputLabel,
+  Select,
+  MenuItem,
 } from "@material-ui/core";
 import { pinListingToIPFS } from "./pinataAPI";
 import Web3 from "web3";
 import BlockBeats from "../contracts/Blockbeats.json";
-
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -41,51 +43,103 @@ const Upload = () => {
   const [genre, setGenre] = useState("");
   const [language, setLanguage] = useState("");
   const [BPM, setBPM] = useState(0);
+  const [key, setKey] = useState("");
+  const [trackType, setTrackType] = useState("");
 
   const [musicFile, setMusicFile] = useState(null);
   const [artFile, setArtFile] = useState(null);
 
   const [loadingStatus, setLoadingStatus] = useState(undefined);
 
+  const keys = [
+    "N/A",
+    "A flat major",
+    "A flat minor",
+    "A major",
+    "A minor",
+    "B flat major",
+    "B flat minor",
+    "B major",
+    "B minor",
+    "C flat major",
+    "C flat minor",
+    "C major",
+    "C minor",
+    "D flat major",
+    "D flat minor",
+    "D major",
+    "D minor",
+    "E flat major",
+    "E flat minor",
+    "E major",
+    "E minor",
+    "F flat major",
+    "F flat minor",
+    "F major",
+    "F minor",
+    "G flat major",
+    "G flat minor",
+    "G major",
+    "G minor",
+  ];
 
-    /******************* BOOTSTRAPPING *****************/
-    useEffect(() => {
-      if (!window.web3) {
-      } else {
-        loadWeb3();
-        loadBlockChainData();
-      }
-    }, []);
-  
-    const loadWeb3 = async () => {
-      if (window.ethereum) {
-        window.web3 = new Web3(window.ethereum);
-        await window.ethereum.enable();
-      } else if (window.web3) {
-        window.web3 = new Web3(window.web3.currentProvider);
-      }
-    };
-  
-    const loadBlockChainData = async () => {
-      const web3 = window.web3;
-  
-      // Use web3 to get the user's accounts.
-      const accounts = await web3.eth.getAccounts();
-      setAccount(accounts[0]);
-  
-      // Check correct network
-      const networkId = await web3.eth.net.getId();
-      if (networkId !== 5777 && networkId !== 4) {
-      } else {
-        const deployedNetwork = BlockBeats.networks[networkId];
-        const instance = new web3.eth.Contract(
-          BlockBeats.abi,
-          deployedNetwork.address
-        );
-        setContract(instance);
-      }
-    };
-    /******************************************************/
+  const trackTypes = [
+    "N/A",
+    "Multi-track",
+    "Bass",
+    "Drums",
+    "Edits",
+    "FX track",
+    "Acoustic Guitar",
+    "Electric Guitar",
+    "Horns",
+    "Instrumental",
+    "Keyboards",
+    "Master",
+    "Percussion",
+    "Sound FX",
+    "Strings",
+    "Vocals",
+  ];
+
+  /******************* BOOTSTRAPPING *****************/
+  useEffect(() => {
+    if (!window.web3) {
+    } else {
+      loadWeb3();
+      loadBlockChainData();
+    }
+  }, []);
+
+  const loadWeb3 = async () => {
+    if (window.ethereum) {
+      window.web3 = new Web3(window.ethereum);
+      await window.ethereum.enable();
+    } else if (window.web3) {
+      window.web3 = new Web3(window.web3.currentProvider);
+    }
+  };
+
+  const loadBlockChainData = async () => {
+    const web3 = window.web3;
+
+    // Use web3 to get the user's accounts.
+    const accounts = await web3.eth.getAccounts();
+    setAccount(accounts[0]);
+
+    // Check correct network
+    const networkId = await web3.eth.net.getId();
+    if (networkId !== 5777 && networkId !== 4) {
+    } else {
+      const deployedNetwork = BlockBeats.networks[networkId];
+      const instance = new web3.eth.Contract(
+        BlockBeats.abi,
+        deployedNetwork.address
+      );
+      setContract(instance);
+    }
+  };
+  /******************************************************/
 
   /************* HANDLERS ******************/
   const handleTitleChange = (event) => {
@@ -121,7 +175,7 @@ const Upload = () => {
   };
   /***************************************/
 
-  const onIpfsSuccess = async(ipfsURI) => {
+  const onIpfsSuccess = async (ipfsURI) => {
     console.log(ipfsURI);
     setLoadingStatus("Submitting to Smart Contract...");
     let result = await contract.methods
@@ -144,7 +198,13 @@ const Upload = () => {
       artFile,
       title,
       description,
-      {genre: genre, language: language, BPM: BPM},
+      {
+        genre: genre,
+        language: language,
+        BPM: BPM,
+        key: key,
+        trackType: trackType,
+      },
       (status) => {
         setLoadingStatus(status);
       },
@@ -182,6 +242,21 @@ const Upload = () => {
               label="Language"
               onChange={(e) => handleLanguageChange(e)}
             />
+            <FormControl>
+              <InputLabel id="type-select-label">Track Type</InputLabel>
+              <Select
+                labelId="type-select-label"
+                id="type-select"
+                value={trackType}
+                onChange={(e) => {
+                  setTrackType(e.target.value);
+                }}
+              >
+                {trackTypes.map((trackType) => (
+                  <MenuItem value={trackType}>{trackType}</MenuItem>
+                ))}
+              </Select>
+            </FormControl>
           </Box>
           <Box
             display="flex"
@@ -190,8 +265,24 @@ const Upload = () => {
             paddingLeft={3}
           >
             <TextField label="BPM" onChange={(e) => handleBPMChange(e)} />
+            <FormControl>
+              <InputLabel id="key-select-label">Key</InputLabel>
+              <Select
+                labelId="key-select-label"
+                id="key-select"
+                value={key}
+                onChange={(e) => {
+                  setKey(e.target.value);
+                }}
+              >
+                {keys.map((key) => (
+                  <MenuItem value={key}>{key}</MenuItem>
+                ))}
+              </Select>
+            </FormControl>
           </Box>
         </Box>
+
         <Box
           display="flex"
           flexDirection="row"
@@ -237,7 +328,9 @@ const Upload = () => {
       return (
         <Box display="flex" justifyContent="center">
           <CircularProgress />
-          <Typography variant="h6" style={{paddingLeft: 10, paddingTop: 4}}>{stateText}</Typography>
+          <Typography variant="h6" style={{ paddingLeft: 10, paddingTop: 4 }}>
+            {stateText}
+          </Typography>
         </Box>
       );
     } else {
