@@ -20,7 +20,7 @@ import theme from "../theme";
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    margin: theme.spacing(1),
+    margin: theme.spacing(2),
   },
   rootCard: {
     maxWidth: 345,
@@ -35,42 +35,33 @@ const Listings = ({ web3, accounts }) => {
 
   return (
     <Box className={classes.root}>
-      <Grid container xs={12} spacing={3}>
-        <Grid item>
-          <Card className={classes.rootCard}>
-            <CardActionArea>
-              <CardMedia
-                component="img"
-                alt="Contemplative Reptile"
-                height="140"
-                image={image}
-                title="Contemplative Reptile"
-              />
-              <CardContent>
-                <Typography component="h5" variant="h5">
-                  Lift Your Skinny Fists
-                </Typography>
-                <Typography variant="subtitle1" color="textSecondary">
-                  Godspeed You! Black Emporer
-                </Typography>
-                <Typography variant="body2" color="textSecondary" component="p">
-                  Lift Your Skinny Fists Like Antennas to Heaven, or Levez Vos
-                  Skinny Fists Comme Antennas to Heaven on the rear of physical
-                  releases, is the second studio album by Canadian post-rock
-                  band Godspeed You! Black Emperor, released as a double album
-                  on 9 October 2000 on vinyl by Constellation and 8 November
-                  2000 on CD by Kranky.
-                </Typography>
-              </CardContent>
-            </CardActionArea>
-            <CardActions>
-              <Typography className={classes.listingPrice} color="primary">
-                0.01 ETH
+      <Box>
+        <Typography variant="h4">Current listings</Typography>
+        <Card className={classes.rootCard}>
+          <CardActionArea>
+            <CardMedia
+              component="img"
+              alt="Contemplative Reptile"
+              height="140"
+              image={image}
+              title="Contemplative Reptile"
+            />
+            <CardContent>
+              <Typography component="h6" variant="h6">
+                Lift Your Skinny Fists
               </Typography>
-            </CardActions>
-          </Card>
-        </Grid>
-      </Grid>
+              <Typography variant="subtitle2" color="textSecondary">
+                Godspeed You! Black Emporer
+              </Typography>
+            </CardContent>
+          </CardActionArea>
+          <CardActions>
+            <Typography className={classes.listingPrice} color="primary">
+              0.01 ETH
+            </Typography>
+          </CardActions>
+        </Card>
+      </Box>
     </Box>
   );
 };
