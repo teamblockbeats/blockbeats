@@ -9,12 +9,16 @@ import {
   CardContent,
   CardActions,
   CardActionArea,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  Button,
 } from "@material-ui/core";
 import image from "./godspeed.jpg";
 import Web3 from "web3";
 import BlockBeats from "../contracts/Blockbeats.json";
 import axios from "axios";
-import { LensOutlined } from "@material-ui/icons";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -22,13 +26,24 @@ const useStyles = makeStyles((theme) => ({
   },
   rootCard: {
     maxWidth: 345,
-    minHeight: 300,
+    [theme.breakpoints.down("lg")]: {
+      maxWidth: "100%",
+    },
+    height: 300,
   },
   listingPrice: {
     marginLeft: theme.spacing(1),
   },
   grid: {
     marginTop: theme.spacing(1),
+  },
+  desc: {
+    overflow: "hidden",
+    textOverflow: "ellipsis",
+    height: 60,
+  },
+  dialogDesc: {
+    height: "100px",
   },
 }));
 
@@ -37,7 +52,9 @@ const Listings = () => {
 
   const [listings, setListings] = useState([]);
   const [account, setAccount] = useState(null);
+  const [open, setOpen] = useState(false);
   const [contract, setContract] = useState(null);
+  const [currListing, setCurrListing] = useState({});
 
   const rootIPFSGateway = "https://ipfs.io/ipfs/";
 
@@ -114,13 +131,39 @@ const Listings = () => {
     }
   };
 
+  const handleClose = () => {
+    setCurrListing({});
+    setOpen(false);
+  };
+
+  const handleClickOpen = (listing) => {
+    setCurrListing(listing);
+    setOpen(true);
+  };
+
   return (
     <Box className={classes.root}>
+      <Dialog onClose={handleClose} open={open} fullWidth>
+        <DialogTitle onClose={handleClose}>{currListing.title}</DialogTitle>
+        <DialogContent dividers>
+          <Typography gutterBottom className={classes.dialogDesc}>
+            {currListing.desc}
+          </Typography>
+        </DialogContent>
+        <DialogActions>
+          <Typography color="primary">
+            {currListing.price / 1000000000000000000} ETH
+          </Typography>
+          <Button color="primary">BUY LICENSE</Button>
+        </DialogActions>
+      </Dialog>
       <Typography variant="h4">Current listings</Typography>
       <Grid container spacing={3} className={classes.grid}>
         {listings.map((lst) => (
-          <Grid item xs={3} key={lst.id}>
-            <Card className={classes.rootCard}>
+          <Grid item xs={12} md={3} key={lst.id}>
+            <Card
+              className={classes.rootCard}
+              onClick={() => handleClickOpen(lst)}>
               <CardActionArea>
                 <CardMedia
                   component="img"
@@ -135,14 +178,15 @@ const Listings = () => {
                   <Typography
                     variant="body2"
                     color="textSecondary"
-                    component="p">
+                    component="p"
+                    className={classes.desc}>
                     {lst.desc}
                   </Typography>
                 </CardContent>
               </CardActionArea>
               <CardActions>
                 <Typography className={classes.listingPrice} color="primary">
-                  {lst.price}
+                  {lst.price / 1000000000000000000} ETH
                 </Typography>
               </CardActions>
             </Card>
