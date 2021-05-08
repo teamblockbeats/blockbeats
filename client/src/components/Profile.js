@@ -1,17 +1,28 @@
-import { Typography } from "@material-ui/core";
 import React, { useState, useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import Grid from "@material-ui/core/Grid";
-import Paper from "@material-ui/core/Paper";
-import List from "@material-ui/core/List";
-import ListItem from "@material-ui/core/ListItem";
-import ListItemText from "@material-ui/core/ListItemText";
-import Collapse from "@material-ui/core/Collapse";
 import ExpandLess from "@material-ui/icons/ExpandLess";
 import ExpandMore from "@material-ui/icons/ExpandMore";
+import {
+  Grid,
+  Paper,
+  List,
+  ListItem,
+  ListItemText,
+  Collapse,
+  Box,
+  Typography,
+  Dialog,
+  DialogContent,
+  DialogActions,
+  Button,
+  Chip,
+} from "@material-ui/core";
+import ReactAudioPlayer from "react-audio-player";
+import axios from "axios";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
+    marginTop: theme.spacing(4),
     padding: theme.spacing(4),
   },
   paperTitle: {
@@ -32,8 +43,11 @@ const Profile = ({ accounts, contract }) => {
 
   const [creations, setCreations] = useState([]);
   const [licenses, setLicenses] = useState([]);
-  //{ tokenId: 0, id: 1, name: "aaa", price: 100 },
-  //]);
+
+  const [currListing, setCurrListing] = useState({});
+  const [popupOpen, setPopupOpen] = useState(false);
+
+  const rootIPFSGateway = "https://ipfs.io/ipfs/";
 
   useEffect(() => {
     if (accounts !== null) {
@@ -60,6 +74,8 @@ const Profile = ({ accounts, contract }) => {
           id: listing["id"],
           name: listing["title"],
           price: listing["price"],
+          URI: listing["URI"],
+          creator: listing["creator"]
         });
       }
     }
@@ -84,6 +100,8 @@ const Profile = ({ accounts, contract }) => {
         id: license["id"],
         name: license["title"],
         price: license["price"],
+        URI: license["URI"],
+        creator: license["creator"]
       });
     }
 
@@ -96,7 +114,7 @@ const Profile = ({ accounts, contract }) => {
     var tokenColumn;
 
     if (tokenId !== undefined) {
-      xsSize = 6;
+      xsSize = 2;
       tokenColumn = (
         <Grid item xs={2}>
           <Typography color="textPrimary">
@@ -106,24 +124,32 @@ const Profile = ({ accounts, contract }) => {
         </Grid>
       );
     } else {
-      xsSize = 8;
+      xsSize = 4;
     }
 
     return (
-      <ListItem button>
+      <ListItem
+        button
+        onClick={() => {
+          handleClickOpen(creation);
+        }}
+      >
         <Grid container direction="row">
           {tokenColumn}
-          <Grid item xs={2}>
+          <Grid item xs={xsSize}>
             <Typography color="textPrimary">
               {" "}
               <b> Listing #{id}</b>
             </Typography>
           </Grid>
-          <Grid item xs={xsSize}>
+          <Grid item xs={6}>
             <Typography color="textPrimary"> "{name}"</Typography>
           </Grid>
           <Grid item xs={2}>
-            <Typography color="textPrimary"> {price} WEI</Typography>
+            <Typography color="textPrimary">
+              {" "}
+              {price / 1000000000000000000} ETH
+            </Typography>
           </Grid>
         </Grid>
       </ListItem>
@@ -168,8 +194,89 @@ const Profile = ({ accounts, contract }) => {
     );
   };
 
+  const removePrefix = (str, prefix) => {
+    if (str && str.startsWith(prefix)) {
+      return str.slice(prefix.length);
+    } else {
+      return str;
+    }
+  };
+
+  const handleClose = () => {
+    setCurrListing({});
+    setPopupOpen(false);
+  };
+
+  const handleClickOpen = async (item) => {
+    console.log(item);
+
+    let jsonUrl = rootIPFSGateway + removePrefix(item.URI, "ipfs://");
+    axios.get(jsonUrl).then(function (res) {
+      setCurrListing({
+        id: item.id,
+        creator: item.creator,
+        price: item.price,
+        attributes: res.data.attributes,
+        title: res.data.name,
+        desc: res.data.description,
+        image: rootIPFSGateway + removePrefix(res.data.image, "ipfs://"),
+        music:
+          rootIPFSGateway + removePrefix(res.data.animation_url, "ipfs://"),
+      });
+      setPopupOpen(true);
+    });
+  };
+
+  const drawDialogue = () => {
+    return (
+      <Dialog onClose={handleClose} open={popupOpen} fullWidth>
+        <DialogContent dividers>
+          <Box display="flex">
+            <Box>
+              <img
+                src={currListing.image}
+                height="100"
+                style={{
+                  border: "2px solid #42DEA8",
+                  marginRight: "10px",
+                }}
+              />
+            </Box>
+            <Box>
+              <Typography variant="h5" className={classes.dialogTitle}>
+                {currListing.title}
+              </Typography>
+              <Typography variant="caption">
+                Created by {currListing.creator}
+              </Typography>
+              <ReactAudioPlayer src={currListing.music} controls />
+            </Box>
+          </Box>
+          <Box className={classes.dialogDesc}>
+            <Typography gutterBottom>{currListing.desc}</Typography>
+          </Box>
+        </DialogContent>
+        <DialogActions>
+          {currListing.attributes &&
+            currListing.attributes.map((attr, index) => (
+              <Chip
+                key={index}
+                label={attr.value}
+                variant="outlined"
+                size="small"
+              ></Chip>
+            ))}
+          <Typography color="primary">
+            {currListing.price / 1000000000000000000} ETH
+          </Typography>
+        </DialogActions>
+      </Dialog>
+    );
+  };
+
   return (
     <Grid container justify="center" direction="row" spacing={3}>
+    {drawDialogue()}
       <Grid item xs={12} md={9}>
         <Paper elevation={3} className={classes.paper}>
           <Typography className={classes.paperTitle}>Account</Typography>

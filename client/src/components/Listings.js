@@ -201,7 +201,7 @@ const Listings = () => {
           </Button>
         </DialogActions>
       </Dialog>
-      <Typography variant="h4">Current listings</Typography>
+      <Typography variant="h4">Current Listings</Typography>
       <Grid container spacing={3} className={classes.grid}>
         {listings.map((lst) => (
           <Grid item xs={12} md={3} key={lst.id}>

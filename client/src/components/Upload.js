@@ -152,7 +152,7 @@ const Upload = () => {
   };
 
   const handlePriceChange = (event) => {
-    setPrice(Number(event.target.value));
+    setPrice(Number(event.target.value) * 1000000000000000000);
   };
 
   const handleGenreChange = (event) => {
@@ -227,7 +227,7 @@ const Upload = () => {
           onChange={(e) => handleDescriptionChange(e)}
         />
         <TextField
-          placeholder="Enter Price (WEI)..."
+          placeholder="Enter Price (ETH)..."
           variant="outlined"
           onChange={(e) => handlePriceChange(e)}
         />
