@@ -33,7 +33,7 @@ const App = () => {
       });
 
       web.eth.net.getId().then((id) => {
-    if (id !== 5777 && id !== 4) {
+        if (id !== 5777 && id !== 4) {
           setInvalidNetWork(true);
         }
       });
@@ -64,7 +64,7 @@ const App = () => {
           <Verify />
         </Route>
         <Route exact path="/">
-          <Listings web3={web3} accounts={accounts} />
+          <Listings />
         </Route>
       </Switch>
     </Box>
