@@ -52,9 +52,6 @@ const Header = ({ web3, accounts }) => {
           <Button component={Link} to="/playground">
             Playground
           </Button>
-          <Button component={Link} to="/licenses">
-            My licenses
-          </Button>
           <Button component={Link} to="/verify">
             Verify
           </Button>

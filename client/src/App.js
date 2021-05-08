@@ -10,6 +10,7 @@ import Licenses from "./components/Licenses";
 import Upload from "./components/Upload";
 import Listings from "./components/Listings";
 import Verify from "./components/Verify";
+import BlockBeats from "./contracts/Blockbeats.json";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -21,6 +22,7 @@ const App = () => {
   const [accounts, setAccounts] = useState(null);
   const [web3, setWeb3] = useState(null);
   const [invalidNetwork, setInvalidNetWork] = useState(false);
+  const [contract, setContract] = useState(null);
 
   const classes = useStyles();
 
@@ -33,8 +35,15 @@ const App = () => {
       });
 
       web.eth.net.getId().then((id) => {
-    if (id !== 5777 && id !== 4) {
+        if (id !== 5777 && id !== 4) {
           setInvalidNetWork(true);
+        } else {
+          const deployedNetwork = BlockBeats.networks[id];
+          const instance = new web.eth.Contract(
+            BlockBeats.abi,
+            deployedNetwork.address
+          );
+          setContract(instance);
         }
       });
     });
@@ -55,7 +64,7 @@ const App = () => {
           <Upload />
         </Route>
         <Route path="/profile">
-          <Profile />
+          <Profile contract={contract} accounts={accounts} />
         </Route>
         <Route path="/licenses">
           <Licenses />
