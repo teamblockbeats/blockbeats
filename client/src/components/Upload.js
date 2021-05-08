@@ -20,6 +20,7 @@ import BlockBeats from "../contracts/Blockbeats.json";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
+    marginTop: theme.spacing(4),
     padding: theme.spacing(4),
   },
   paperTitle: {
@@ -235,8 +236,7 @@ const Upload = () => {
             display="flex"
             flexDirection="column"
             flexGrow={1}
-            paddingRight={3}
-          >
+            paddingRight={3}>
             <TextField label="Genre" onChange={(e) => handleGenreChange(e)} />
             <TextField
               label="Language"
@@ -250,8 +250,7 @@ const Upload = () => {
                 value={trackType}
                 onChange={(e) => {
                   setTrackType(e.target.value);
-                }}
-              >
+                }}>
                 {trackTypes.map((trackType) => (
                   <MenuItem value={trackType}>{trackType}</MenuItem>
                 ))}
@@ -262,8 +261,7 @@ const Upload = () => {
             display="flex"
             flexDirection="column"
             flexGrow={1}
-            paddingLeft={3}
-          >
+            paddingLeft={3}>
             <TextField label="BPM" onChange={(e) => handleBPMChange(e)} />
             <FormControl>
               <InputLabel id="key-select-label">Key</InputLabel>
@@ -273,8 +271,7 @@ const Upload = () => {
                 value={key}
                 onChange={(e) => {
                   setKey(e.target.value);
-                }}
-              >
+                }}>
                 {keys.map((key) => (
                   <MenuItem value={key}>{key}</MenuItem>
                 ))}
@@ -287,8 +284,7 @@ const Upload = () => {
           display="flex"
           flexDirection="row"
           justifyContent="space-around"
-          padding={3}
-        >
+          padding={3}>
           <Box display="flex" flexDirection="column">
             <FormLabel htmlFor="upload-music">Upload Music</FormLabel>
             <TextField
@@ -318,7 +314,7 @@ const Upload = () => {
   const drawUploadButton = () => {
     let stateText = loadingStatus;
 
-    if (stateText == "Done!" || stateText == "Failed") {
+    if (stateText === "Done!" || stateText === "Failed") {
       return (
         <Box display="flex" justifyContent="center">
           <Typography variant="h6">{stateText}</Typography>
@@ -340,8 +336,7 @@ const Upload = () => {
           variant="contained"
           onClick={handleCreateListing}
           color="primary"
-          style={{ color: "white" }}
-        >
+          style={{ color: "white" }}>
           Create Listing
         </Button>
       );

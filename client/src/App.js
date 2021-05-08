@@ -73,7 +73,7 @@ const App = () => {
           <Verify />
         </Route>
         <Route exact path="/">
-          <Listings web3={web3} accounts={accounts} />
+          <Listings />
         </Route>
       </Switch>
     </Box>

@@ -12,6 +12,7 @@ import BlockBeats from "../contracts/Blockbeats.json";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
+    marginTop: theme.spacing(4),
     padding: theme.spacing(4),
   },
   paperTitle: {
@@ -111,14 +112,14 @@ const Verify = () => {
     console.log("verify");
     console.log(Number(listingIDField));
     console.log(user);
-    setLoading(true)
+    setLoading(true);
     setVerified(
       (await addrOwnsListing(user, Number(listingIDField))).valueOf()
     );
 
     setCheckedUser(concatAddress(10, user));
     setCheckedListing(Number(listingIDField));
-    setLoading(false)
+    setLoading(false);
   };
 
   const drawVerifyInputFields = () => {
@@ -154,8 +155,7 @@ const Verify = () => {
           display="flex"
           justifyContent="center"
           flexDirection="row"
-          marginTop={2}
-        >
+          marginTop={2}>
           <CheckCircleIcon
             color="primary"
             style={{ marginRight: 5 }}
@@ -173,8 +173,7 @@ const Verify = () => {
           display="flex"
           justifyContent="center"
           flexDirection="row"
-          marginTop={2}
-        >
+          marginTop={2}>
           <CancelIcon color="secondary" fontSize="large" />
           <Typography style={{ margin: 5 }}>
             <b>Unverified.</b> User "{checkedUser}" has <b>not</b> purchased a
@@ -198,8 +197,7 @@ const Verify = () => {
             variant="contained"
             onClick={handleVerify}
             color="primary"
-            style={{ color: "white" }}
-          >
+            style={{ color: "white" }}>
             Verify
           </Button>
           {drawVerified()}

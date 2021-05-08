@@ -53,7 +53,7 @@ const ContractPlayground = () => {
   const [resolvedMusic, setResolvedMusic] = useState(null);
   const [resolvedImage, setResolvedImage] = useState(null);
 
-  const rootIPFSGateway = "https://ipfs.io/ipfs/"
+  const rootIPFSGateway = "https://ipfs.io/ipfs/";
 
   /******************* BOOTSTRAPPING *****************/
   useEffect(() => {
@@ -232,7 +232,7 @@ const ContractPlayground = () => {
       titleToPin,
       descriptionToPin,
       {},
-      ((_) => {}),
+      (_) => {},
       onUploadSuccess
     );
   };
@@ -245,8 +245,7 @@ const ContractPlayground = () => {
             display="flex"
             flexDirection="column"
             alignItems="center"
-            justifyItems="center"
-          >
+            justifyItems="center">
             <CircularProgress style={{ margin: "auto" }} />
             <Typography>Uploading to IPFS...</Typography>
           </Box>
@@ -289,8 +288,7 @@ const ContractPlayground = () => {
           variant="contained"
           onClick={handleUploadIPFS}
           color="primary"
-          style={{ color: "white" }}
-        >
+          style={{ color: "white" }}>
           Upload
         </Button>
 
@@ -307,24 +305,27 @@ const ContractPlayground = () => {
   const handleIPFSHashResolveChange = (e) => {
     setIPFSToResolve(e.target.value);
   };
-  
+
   const removePrefix = (str, prefix) => {
     if (str.startsWith(prefix)) {
-      return str.slice(prefix.length)
+      return str.slice(prefix.length);
     } else {
-      return str
+      return str;
     }
-  }
+  };
 
   const handleResolveIPFS = () => {
-    let jsonUrl = rootIPFSGateway + (removePrefix(IPFSToResolve, "ipfs://"))
-    axios.get(jsonUrl)
-      .then(function(response) {
-        setResolvedTitle(response.data.name)
-        setResolvedDesc(response.data.description)
-        setResolvedImage(rootIPFSGateway + removePrefix(response.data.image, "ipfs://"))
-        setResolvedMusic(rootIPFSGateway + removePrefix(response.data.animation_url, "ipfs://"))
-      })
+    let jsonUrl = rootIPFSGateway + removePrefix(IPFSToResolve, "ipfs://");
+    axios.get(jsonUrl).then(function (response) {
+      setResolvedTitle(response.data.name);
+      setResolvedDesc(response.data.description);
+      setResolvedImage(
+        rootIPFSGateway + removePrefix(response.data.image, "ipfs://")
+      );
+      setResolvedMusic(
+        rootIPFSGateway + removePrefix(response.data.animation_url, "ipfs://")
+      );
+    });
   };
 
   const drawIPFSResolvePaper = () => {
@@ -345,8 +346,7 @@ const ContractPlayground = () => {
           variant="contained"
           onClick={handleResolveIPFS}
           color="primary"
-          style={{ color: "white" }}
-        >
+          style={{ color: "white" }}>
           Resolve
         </Button>
         <Typography>
@@ -355,13 +355,8 @@ const ContractPlayground = () => {
         <Typography>
           <b>Description: </b> {resolvedDesc}
         </Typography>
-        <img
-          src= {resolvedImage}
-        />
-        <ReactAudioPlayer
-          src= {resolvedMusic}
-          controls
-        />
+        <img src={resolvedImage} />
+        <ReactAudioPlayer src={resolvedMusic} controls />
       </Paper>
     );
   };
@@ -383,8 +378,7 @@ const ContractPlayground = () => {
                   variant="contained"
                   onClick={handleCreateListing}
                   color="primary"
-                  style={{ color: "white" }}
-                >
+                  style={{ color: "white" }}>
                   Create Listing
                 </Button>
               </Paper>
@@ -394,8 +388,8 @@ const ContractPlayground = () => {
                 <Typography className={classes.paperTitle}>
                   View Listings
                 </Typography>
-                {listings.map((listing) => (
-                  <Paper variant="outlined">
+                {listings.map((listing, index) => (
+                  <Paper key={index} variant="outlined">
                     <Typography>
                       <b>ID:</b> {listing["id"]}
                     </Typography>
@@ -418,8 +412,7 @@ const ContractPlayground = () => {
                   variant="contained"
                   onClick={handleViewListings}
                   color="primary"
-                  style={{ color: "white" }}
-                >
+                  style={{ color: "white" }}>
                   View Listings
                 </Button>
               </Paper>
@@ -443,8 +436,7 @@ const ContractPlayground = () => {
                   variant="contained"
                   onClick={handleBuyListing}
                   color="primary"
-                  style={{ color: "white" }}
-                >
+                  style={{ color: "white" }}>
                   Buy License
                 </Button>
               </Paper>
@@ -481,8 +473,7 @@ const ContractPlayground = () => {
                   variant="contained"
                   onClick={handleGetLicenses}
                   color="primary"
-                  style={{ color: "white" }}
-                >
+                  style={{ color: "white" }}>
                   View My Licenses
                 </Button>
               </Paper>
