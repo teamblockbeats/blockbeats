@@ -10,14 +10,14 @@ import {
   CardActions,
   CardActionArea,
   Dialog,
-  DialogTitle,
   DialogContent,
   DialogActions,
   Button,
+  Chip,
 } from "@material-ui/core";
-import image from "./godspeed.jpg";
 import Web3 from "web3";
 import BlockBeats from "../contracts/Blockbeats.json";
+import ReactAudioPlayer from "react-audio-player";
 import axios from "axios";
 
 const useStyles = makeStyles((theme) => ({
@@ -43,7 +43,13 @@ const useStyles = makeStyles((theme) => ({
     height: 60,
   },
   dialogDesc: {
+    marginTop: theme.spacing(1),
+    marginBottom: theme.spacing(1),
     height: "100px",
+    overflow: "scroll",
+  },
+  attributes: {
+    width: "400px",
   },
 }));
 
@@ -86,11 +92,14 @@ const Listings = () => {
     listings.forEach((lst) => {
       let jsonUrl = rootIPFSGateway + removePrefix(lst.URI, "ipfs://");
       axios.get(jsonUrl).then(function (res) {
+        console.log(res);
         setListings((listings) => [
           ...listings,
           {
             id: lst.id,
+            creator: lst.creator,
             price: lst.price,
+            attributes: res.data.attributes,
             title: res.data.name,
             desc: res.data.description,
             image: rootIPFSGateway + removePrefix(res.data.image, "ipfs://"),
@@ -131,6 +140,12 @@ const Listings = () => {
     }
   };
 
+  const handleBuyListing = async () => {
+    await contract.methods
+      .buyListing(currListing.id)
+      .send({ from: account, value: currListing.price });
+  };
+
   const handleClose = () => {
     setCurrListing({});
     setOpen(false);
@@ -144,17 +159,43 @@ const Listings = () => {
   return (
     <Box className={classes.root}>
       <Dialog onClose={handleClose} open={open} fullWidth>
-        <DialogTitle onClose={handleClose}>{currListing.title}</DialogTitle>
         <DialogContent dividers>
-          <Typography gutterBottom className={classes.dialogDesc}>
-            {currListing.desc}
-          </Typography>
+          <Box display="flex">
+            <Box>
+              <img
+                src={currListing.image}
+                height="100"
+                style={{
+                  border: "2px solid #42DEA8",
+                  marginRight: "10px",
+                }}
+              />
+            </Box>
+            <Box>
+              <Typography variant="h5" className={classes.dialogTitle}>
+                {currListing.title}
+              </Typography>
+              <Typography variant="caption">
+                Created by {currListing.creator}
+              </Typography>
+              <ReactAudioPlayer src={currListing.music} controls />
+            </Box>
+          </Box>
+          <Box className={classes.dialogDesc}>
+            <Typography gutterBottom>{currListing.desc}</Typography>
+          </Box>
         </DialogContent>
         <DialogActions>
+          {currListing.attributes &&
+            currListing.attributes.map((attr) => (
+              <Chip label={attr.value} variant="outlined" size="small"></Chip>
+            ))}
           <Typography color="primary">
             {currListing.price / 1000000000000000000} ETH
           </Typography>
-          <Button color="primary">BUY LICENSE</Button>
+          <Button color="primary" onClick={handleBuyListing}>
+            BUY LICENSE
+          </Button>
         </DialogActions>
       </Dialog>
       <Typography variant="h4">Current listings</Typography>
