@@ -92,7 +92,6 @@ const Listings = () => {
     listings.forEach((lst) => {
       let jsonUrl = rootIPFSGateway + removePrefix(lst.URI, "ipfs://");
       axios.get(jsonUrl).then(function (res) {
-        console.log(res);
         setListings((listings) => [
           ...listings,
           {
@@ -187,8 +186,12 @@ const Listings = () => {
         </DialogContent>
         <DialogActions>
           {currListing.attributes &&
-            currListing.attributes.map((attr) => (
-              <Chip label={attr.value} variant="outlined" size="small"></Chip>
+            currListing.attributes.map((attr, index) => (
+              <Chip
+                key={index}
+                label={attr.value}
+                variant="outlined"
+                size="small"></Chip>
             ))}
           <Typography color="primary">
             {currListing.price / 1000000000000000000} ETH
