@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import getWeb3 from "./getWeb3";
 import { makeStyles } from "@material-ui/core/styles";
-import { Box } from "@material-ui/core";
+import { Box, Typography } from "@material-ui/core";
 import ContractPlayground from "./components/ContractPlayground";
 import Profile from "./components/Profile";
 import { Switch, Route } from "react-router-dom";
@@ -50,7 +50,17 @@ const App = () => {
   }, []);
 
   if (invalidNetwork) {
-    return <div>Not using metamask with test network grr</div>;
+    
+    return (
+    <div>
+            <Header web3={web3} accounts={accounts} />
+      <Box display="flex">
+      <Typography style={{margin: "auto"}} variant="h5">
+        Please switch to Rinkeby Testnet
+      </Typography>
+      </Box>
+      </div>
+    )
   }
 
   return (
