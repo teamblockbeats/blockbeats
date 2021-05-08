@@ -175,12 +175,12 @@ const Upload = () => {
     setArtFile(event.target.files[0]);
   };
   /***************************************/
-
+  
   const onIpfsSuccess = async (ipfsURI) => {
     console.log(ipfsURI);
     setLoadingStatus("Submitting to Smart Contract...");
     let result = await contract.methods
-      .createListing(title, price, ipfsURI)
+      .createListing(title, price.toString(), ipfsURI)
       .send({ from: account });
     setLoadingStatus("Done!");
     console.log(result);
