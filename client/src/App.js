@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import getWeb3 from "./getWeb3";
 import { makeStyles } from "@material-ui/core/styles";
-import { Box } from "@material-ui/core";
+import { Box, Typography } from "@material-ui/core";
 import ContractPlayground from "./components/ContractPlayground";
 import Profile from "./components/Profile";
 import { Switch, Route } from "react-router-dom";
@@ -10,6 +10,7 @@ import Licenses from "./components/Licenses";
 import Upload from "./components/Upload";
 import Listings from "./components/Listings";
 import Verify from "./components/Verify";
+import BlockBeats from "./contracts/Blockbeats.json";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -21,6 +22,7 @@ const App = () => {
   const [accounts, setAccounts] = useState(null);
   const [web3, setWeb3] = useState(null);
   const [invalidNetwork, setInvalidNetWork] = useState(false);
+  const [contract, setContract] = useState(null);
 
   const classes = useStyles();
 
@@ -35,13 +37,30 @@ const App = () => {
       web.eth.net.getId().then((id) => {
         if (id !== 5777 && id !== 4) {
           setInvalidNetWork(true);
+        } else {
+          const deployedNetwork = BlockBeats.networks[id];
+          const instance = new web.eth.Contract(
+            BlockBeats.abi,
+            deployedNetwork.address
+          );
+          setContract(instance);
         }
       });
     });
   }, []);
 
   if (invalidNetwork) {
-    return <div>Not using metamask with test network grr</div>;
+    
+    return (
+    <div>
+            <Header web3={web3} accounts={accounts} />
+      <Box display="flex">
+      <Typography style={{margin: "auto"}} variant="h5">
+        Please switch to Rinkeby Testnet
+      </Typography>
+      </Box>
+      </div>
+    )
   }
 
   return (
@@ -55,7 +74,7 @@ const App = () => {
           <Upload />
         </Route>
         <Route path="/profile">
-          <Profile />
+          <Profile contract={contract} accounts={accounts} />
         </Route>
         <Route path="/licenses">
           <Licenses />
