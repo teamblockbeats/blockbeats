@@ -10,6 +10,7 @@ import Licenses from "./components/Licenses";
 import Upload from "./components/Upload";
 import Listings from "./components/Listings";
 import Verify from "./components/Verify";
+import About from "./components/About";
 import BlockBeats from "./contracts/Blockbeats.json";
 
 const useStyles = makeStyles((theme) => ({
@@ -67,20 +68,17 @@ const App = () => {
     <Box className={classes.root}>
       <Header web3={web3} accounts={accounts} />
       <Switch>
-        <Route path="/playground">
-          <ContractPlayground />
-        </Route>
         <Route path="/upload">
           <Upload />
         </Route>
         <Route path="/profile">
           <Profile contract={contract} accounts={accounts} />
         </Route>
-        <Route path="/licenses">
-          <Licenses />
-        </Route>
         <Route path="/verify">
           <Verify />
+        </Route>
+        <Route path = "/about">
+          <About />
         </Route>
         <Route exact path="/">
           <Listings />
