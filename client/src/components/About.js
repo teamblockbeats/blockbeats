@@ -56,34 +56,29 @@ const About = () => {
           </Typography>
 
           <Typography
-          variant="h6"
-          style={{ marginTop: 75, marginBottom: 10, textAlign:"center" }}>
-              Links
-          </Typography>
-          <Grid
-            justify="center"
-            container
-            direction="row"
+            variant="h6"
+            style={{ marginTop: 75, marginBottom: 10, textAlign: "center" }}
           >
+            Links
+          </Typography>
+          <Grid justify="center" container direction="row">
             <Grid
               container
               xs={3}
               justify="center"
               direction="column"
               alignItems="center"
-              onClick={() => {
-                console.log("AAA");
-              }}
             >
               <IconButton
                 onClick={() => {
-                  window.location.href = "https://rinkeby.etherscan.io/address/0x799dfa2c0f28f566a70be10ad3b4227348743190";
+                  window.location.href =
+                    "https://explorer-mainnet.maticvigil.com/address/0x97c73dB41BFbF2B8c3d1Ea2f3C1193ae429a9226/transactions";
                 }}
                 color="primary"
               >
                 <ReceiptIcon />
               </IconButton>
-              <Typography>Contract</Typography>
+              <Typography style={{ textAlign: "center" }}>MATIC</Typography>
             </Grid>
             <Grid
               container
@@ -94,14 +89,55 @@ const About = () => {
             >
               <IconButton
                 onClick={() => {
-                  window.location.href = "https://testnets.opensea.io/collection/blockbeats";
+                  window.location.href =
+                    "https://matic.opensea.io";
                 }}
                 color="primary"
               >
                 <DirectionsBoatIcon />
               </IconButton>
+              <Typography style={{ textAlign: "center" }}>
+                Matic Opensea
+              </Typography>
+            </Grid>
+            <Grid
+              container
+              xs={3}
+              justify="center"
+              direction="column"
+              alignItems="center"
+            >
+              <IconButton
+                onClick={() => {
+                  window.location.href =
+                    "https://rinkeby.etherscan.io/address/0x799dfa2c0f28f566a70be10ad3b4227348743190";
+                }}
+                color="secondary"
+              >
+                <ReceiptIcon />
+              </IconButton>
+              <Typography style={{ textAlign: "center" }}>Rinkeby</Typography>
+            </Grid>
+            <Grid
+              container
+              xs={3}
+              justify="center"
+              direction="column"
+              alignItems="center"
+            >
+              <IconButton
+                onClick={() => {
+                  window.location.href =
+                    "https://testnets.opensea.io/collection/blockbeats";
+                }}
+                color="secondary"
+              >
+                <DirectionsBoatIcon />
+              </IconButton>
 
-              <Typography>Opensea</Typography>
+              <Typography style={{ textAlign: "center" }}>
+                Rinkeby Opensea
+              </Typography>
             </Grid>
           </Grid>
         </Paper>

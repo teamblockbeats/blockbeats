@@ -83,7 +83,7 @@ const ContractPlayground = () => {
 
     // Check correct network
     const networkId = await web3.eth.net.getId();
-    if (networkId !== 5777 && networkId !== 4) {
+    if (networkId !== 5777 && networkId !== 4  && networkId !== 137) {
       setInvalidNetWork(true);
       setLoading(false);
     } else {

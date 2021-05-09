@@ -62,11 +62,16 @@ const Listings = () => {
   const [contract, setContract] = useState(null);
   const [currListing, setCurrListing] = useState({});
 
+  const [currency, setCurrency] = useState("ETH")
+
   const rootIPFSGateway = "https://ipfs.io/ipfs/";
 
   useEffect(() => {
-    loadWeb3();
-    loadBlockChainData();
+    if (!window.web3) {
+    } else {
+      loadWeb3();
+      loadBlockChainData();
+    }
   }, []);
 
   useEffect(() => {
@@ -128,7 +133,7 @@ const Listings = () => {
 
     // Check correct network
     const networkId = await web3.eth.net.getId();
-    if (networkId !== 5777 && networkId !== 4) {
+    if (networkId !== 5777 && networkId !== 4  && networkId !== 137) {
     } else {
       const deployedNetwork = BlockBeats.networks[networkId];
       const instance = new web3.eth.Contract(
@@ -136,6 +141,9 @@ const Listings = () => {
         deployedNetwork.address
       );
       setContract(instance);
+    }
+    if (networkId == 137) {
+      setCurrency("MATIC")
     }
   };
 
@@ -194,7 +202,7 @@ const Listings = () => {
                 size="small"></Chip>
             ))}
           <Typography color="primary">
-            {currListing.price / 1000000000000000000} ETH
+            {currListing.price / 1000000000000000000} {currency}
           </Typography>
           <Button color="primary" onClick={handleBuyListing}>
             BUY LICENSE
@@ -230,7 +238,7 @@ const Listings = () => {
               </CardActionArea>
               <CardActions>
                 <Typography className={classes.listingPrice} color="primary">
-                  {lst.price / 1000000000000000000} ETH
+                  {lst.price / 1000000000000000000} {currency}
                 </Typography>
               </CardActions>
             </Card>

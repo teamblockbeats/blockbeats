@@ -36,7 +36,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Profile = ({ accounts, contract }) => {
+const Profile = ({ accounts, contract, currency }) => {
   const classes = useStyles();
 
   const [account, setAccount] = useState(null);
@@ -148,7 +148,7 @@ const Profile = ({ accounts, contract }) => {
           <Grid item xs={2}>
             <Typography color="textPrimary">
               {" "}
-              {price / 1000000000000000000} ETH
+              {price / 1000000000000000000} {currency}
             </Typography>
           </Grid>
         </Grid>
@@ -267,7 +267,7 @@ const Profile = ({ accounts, contract }) => {
               ></Chip>
             ))}
           <Typography color="primary">
-            {currListing.price / 1000000000000000000} ETH
+            {currListing.price / 1000000000000000000} {currency}
           </Typography>
         </DialogActions>
       </Dialog>

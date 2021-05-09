@@ -130,7 +130,7 @@ const Upload = () => {
 
     // Check correct network
     const networkId = await web3.eth.net.getId();
-    if (networkId !== 5777 && networkId !== 4) {
+    if (networkId !== 5777 && networkId !== 4  && networkId !== 137) {
     } else {
       const deployedNetwork = BlockBeats.networks[networkId];
       const instance = new web3.eth.Contract(
