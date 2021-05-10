@@ -27,6 +27,9 @@ contract Blockbeats is ERC721 {
     constructor() ERC721("BBLicenses", "BBLC") {}
 
     /************ ARTIST **********/
+    /**
+     * Creates a new listing struct instance and appends to contract Listing array
+     */
     function createListing(
         string memory title,
         uint64 price,
@@ -47,10 +50,18 @@ contract Blockbeats is ERC721 {
     /*****************************/
 
     /******** CUSTOMERS **********/
+    /**
+     * Returns the contracts Listing array
+     */
     function viewListings() public view returns (Listing[] memory) {
         return (listings);
     }
 
+    /**
+     * Handles request to buy a listingID.
+     * If the payment is correct, a new token is minted using the URI in the
+     * listing. The original creator of the listing is paid the payment.
+     */
     function buyListing(uint256 id) public payable {
         require(listings.length > id, "This listing ID does not exist");
         uint256 price = listings[id].price;
@@ -63,11 +74,17 @@ contract Blockbeats is ERC721 {
 
         mint(listings[id].URI);
     }
-    
+   
+   /**
+    * returns the tokens owned by a particular address
+    */
     function tokensAtAddress(address owner) public view returns (uint256[] memory) {
         return(_ownersTokens[owner]);
     }
     
+    /**
+     * Returns the listing associated with a tokenId
+     */
     function resolveTokenToListing(uint256 tokenId) public view returns (Listing memory) {
         uint256 listingId = _tokenListings[tokenId];
         return listings[listingId];
@@ -77,11 +94,18 @@ contract Blockbeats is ERC721 {
 
     /***** ERC721 extensions ****/
 
-    // https://docs.opensea.io/docs/contract-level-metadata
+    /** 
+     Returns a URI with metadata about the contract.
+     See: https://docs.opensea.io/docs/contract-level-metadata
+     */
     function contractURI() public pure returns (string memory) {
         return "ipfs://QmZCJ3M9ki4pW2wMJt7gpoLAuTyZhJ7Rj58kfpoTESv5ab";
     }
 
+    /**
+     Calls the openzepplin _mint function and maps the URI against the
+     new minted token.
+     */
     function mint(string memory tokenURI_) private {
         _mint(msg.sender, numTokens);
         _setTokenURI(numTokens, tokenURI_);
@@ -89,6 +113,9 @@ contract Blockbeats is ERC721 {
         numTokens++;
     }
 
+    /**
+     Maps a URI to a token if the token exists
+     */
     function _setTokenURI(uint256 tokenId, string memory _tokenURI)
         internal
         virtual
@@ -100,6 +127,9 @@ contract Blockbeats is ERC721 {
         _tokenURIs[tokenId] = _tokenURI;
     }
 
+    /**
+     returns a URI mapped to a tokenID if the token exists
+     */
     function tokenURI(uint256 tokenId)
         public
         view
