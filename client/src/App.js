@@ -1,17 +1,15 @@
 import React, { useState, useEffect } from "react";
-import getWeb3 from "./getWeb3";
 import { makeStyles } from "@material-ui/core/styles";
 import { Box, Typography } from "@material-ui/core";
-import ContractPlayground from "./components/ContractPlayground";
 import Profile from "./components/Profile";
 import { Switch, Route } from "react-router-dom";
 import Header from "./components/Header";
-import Licenses from "./components/Licenses";
 import Upload from "./components/Upload";
 import Listings from "./components/Listings";
 import Verify from "./components/Verify";
 import About from "./components/About";
 import BlockBeats from "./contracts/Blockbeats.json";
+import Web3 from "web3";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -20,8 +18,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const App = () => {
-  const [accounts, setAccounts] = useState(null);
-  const [web3, setWeb3] = useState(null);
+  const [account, setAccount] = useState(null);
   const [invalidNetwork, setInvalidNetWork] = useState(false);
   const [contract, setContract] = useState(null);
   const [currency, setCurrency] = useState("ETH");
@@ -29,49 +26,52 @@ const App = () => {
   const classes = useStyles();
 
   useEffect(() => {
-    getWeb3()
-      .then((web) => {
-        setWeb3(web);
+    if (!window.web3) {
+    } else {
+      loadWeb3();
+      loadBlockChainData();
+    }
+  });
 
-        web.eth
-          .getAccounts()
-          .then((accounts) => {
-            setAccounts(accounts);
-          })
-          .catch((err) => {
-            setInvalidNetWork(true);
-          });
+  const loadWeb3 = async () => {
+    if (window.ethereum) {
+      window.web3 = new Web3(window.ethereum);
+      await window.ethereum.enable();
+    } else if (window.web3) {
+      window.web3 = new Web3(window.web3.currentProvider);
+    } else {
+      setInvalidNetWork(true);
+    }
+  };
 
-        web.eth.net
-          .getId()
-          .then((id) => {
-            if (id !== 5777 && id !== 4 && id !== 137) {
-              setInvalidNetWork(true);
-            } else {
-              const deployedNetwork = BlockBeats.networks[id];
-              const instance = new web.eth.Contract(
-                BlockBeats.abi,
-                deployedNetwork.address
-              );
-              setContract(instance);
-            }
-            if (id == 137) {
-              setCurrency("MATIC");
-            }
-          })
-          .catch((err) => {
-            setInvalidNetWork(true);
-          });
-      })
-      .catch((err) => {
-        setInvalidNetWork(true);
-      });
-  }, []);
+  const loadBlockChainData = async () => {
+    const web3 = window.web3;
+
+    // Use web3 to get the user's accounts.
+    const accounts = await web3.eth.getAccounts();
+    setAccount(accounts[0]);
+
+    // Check correct network
+    const networkId = await web3.eth.net.getId();
+    if (networkId !== 5777 && networkId !== 4 && networkId !== 137) {
+      setInvalidNetWork(true);
+    } else {
+      const deployedNetwork = BlockBeats.networks[networkId];
+      const instance = new web3.eth.Contract(
+        BlockBeats.abi,
+        deployedNetwork.address
+      );
+      setContract(instance);
+    }
+    if (networkId == 137) {
+      setCurrency("MATIC");
+    }
+  };
 
   if (invalidNetwork) {
     return (
       <div>
-        <Header web3={web3} accounts={accounts} />
+        <Header account={account} />
         <Switch>
           <Route path="/about">
             <About />
@@ -90,17 +90,13 @@ const App = () => {
 
   return (
     <Box className={classes.root}>
-      <Header web3={web3} accounts={accounts} />
+      <Header account={account} />
       <Switch>
         <Route path="/upload">
           <Upload />
         </Route>
         <Route path="/profile">
-          <Profile
-            contract={contract}
-            accounts={accounts}
-            currency={currency}
-          />
+          <Profile contract={contract} account={account} currency={currency} />
         </Route>
         <Route path="/verify">
           <Verify />

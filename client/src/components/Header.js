@@ -31,7 +31,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Header = ({ web3, accounts }) => {
+const Header = ({ account }) => {
   const classes = useStyles();
   return (
     <AppBar position="sticky" color="inherit">
@@ -60,7 +60,7 @@ const Header = ({ web3, accounts }) => {
           component={Link}
           to={{ pathname: `/profile` }}
           className={classes.addressButton}>
-          <Box class={classes.addressText}>{accounts}</Box>
+          <Box class={classes.addressText}>{account}</Box>
           <AccountCircleIcon fontSize="large" className={classes.accountIcon} />
         </Button>
       </Toolbar>

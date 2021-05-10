@@ -73,6 +73,7 @@ const Listings = () => {
     } else {
       loadWeb3();
       loadBlockChainData();
+      console.log("loaded blockchain data");
     }
   }, []);
 
