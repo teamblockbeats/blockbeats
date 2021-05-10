@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import {
-  Grid,
   Box,
   Typography,
   Card,
@@ -25,8 +24,8 @@ const useStyles = makeStyles((theme) => ({
     margin: theme.spacing(2),
   },
   rootCard: {
-    maxWidth: 345,
-    [theme.breakpoints.down("lg")]: {
+    maxWidth: "345px",
+    [theme.breakpoints.down("xs")]: {
       maxWidth: "100%",
     },
     height: 300,
@@ -46,10 +45,13 @@ const useStyles = makeStyles((theme) => ({
     marginTop: theme.spacing(1),
     marginBottom: theme.spacing(1),
     height: "100px",
-    overflow: "scroll",
+    overflow: "auto",
   },
   attributes: {
     width: "400px",
+  },
+  boxCard: {
+    margin: theme.spacing(2),
   },
 }));
 
@@ -62,7 +64,7 @@ const Listings = () => {
   const [contract, setContract] = useState(null);
   const [currListing, setCurrListing] = useState({});
 
-  const [currency, setCurrency] = useState("ETH")
+  const [currency, setCurrency] = useState("ETH");
 
   const rootIPFSGateway = "https://ipfs.io/ipfs/";
 
@@ -133,7 +135,7 @@ const Listings = () => {
 
     // Check correct network
     const networkId = await web3.eth.net.getId();
-    if (networkId !== 5777 && networkId !== 4  && networkId !== 137) {
+    if (networkId !== 5777 && networkId !== 4 && networkId !== 137) {
     } else {
       const deployedNetwork = BlockBeats.networks[networkId];
       const instance = new web3.eth.Contract(
@@ -143,7 +145,7 @@ const Listings = () => {
       setContract(instance);
     }
     if (networkId == 137) {
-      setCurrency("MATIC")
+      setCurrency("MATIC");
     }
   };
 
@@ -210,9 +212,9 @@ const Listings = () => {
         </DialogActions>
       </Dialog>
       <Typography variant="h4">Current Listings</Typography>
-      <Grid container spacing={3} className={classes.grid}>
+      <Box display="flex" flexWrap="wrap" className={classes.grid}>
         {listings.map((lst) => (
-          <Grid item xs={12} md={3} key={lst.id}>
+          <Box key={lst.id} className={classes.boxCard}>
             <Card
               className={classes.rootCard}
               onClick={() => handleClickOpen(lst)}>
@@ -242,9 +244,9 @@ const Listings = () => {
                 </Typography>
               </CardActions>
             </Card>
-          </Grid>
+          </Box>
         ))}
-      </Grid>
+      </Box>
     </Box>
   );
 };
