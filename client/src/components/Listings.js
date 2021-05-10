@@ -24,7 +24,7 @@ const useStyles = makeStyles((theme) => ({
     margin: theme.spacing(2),
   },
   rootCard: {
-    maxWidth: "345px",
+    maxWidth: "300px",
     [theme.breakpoints.down("xs")]: {
       maxWidth: "100%",
     },
