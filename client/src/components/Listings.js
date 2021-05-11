@@ -14,8 +14,6 @@ import {
   Button,
   Chip,
 } from "@material-ui/core";
-import Web3 from "web3";
-import BlockBeats from "../contracts/Blockbeats.json";
 import ReactAudioPlayer from "react-audio-player";
 import axios from "axios";
 
@@ -55,27 +53,14 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Listings = () => {
-  const classes = useStyles();
-
+const Listings = ({ contract, account, currency }) => {
   const [listings, setListings] = useState([]);
-  const [account, setAccount] = useState(null);
   const [open, setOpen] = useState(false);
-  const [contract, setContract] = useState(null);
   const [currListing, setCurrListing] = useState({});
 
-  const [currency, setCurrency] = useState("ETH");
+  const classes = useStyles();
 
   const rootIPFSGateway = "https://ipfs.io/ipfs/";
-
-  useEffect(() => {
-    if (!window.web3) {
-    } else {
-      loadWeb3();
-      loadBlockChainData();
-      console.log("loaded blockchain data");
-    }
-  }, []);
 
   useEffect(() => {
     if (contract) {
@@ -116,38 +101,6 @@ const Listings = () => {
         ]);
       });
     });
-  };
-
-  const loadWeb3 = async () => {
-    if (window.ethereum) {
-      window.web3 = new Web3(window.ethereum);
-      await window.ethereum.enable();
-    } else if (window.web3) {
-      window.web3 = new Web3(window.web3.currentProvider);
-    }
-  };
-
-  const loadBlockChainData = async () => {
-    const web3 = window.web3;
-
-    // Use web3 to get the user's accounts.
-    const accounts = await web3.eth.getAccounts();
-    setAccount(accounts[0]);
-
-    // Check correct network
-    const networkId = await web3.eth.net.getId();
-    if (networkId !== 5777 && networkId !== 4 && networkId !== 137) {
-    } else {
-      const deployedNetwork = BlockBeats.networks[networkId];
-      const instance = new web3.eth.Contract(
-        BlockBeats.abi,
-        deployedNetwork.address
-      );
-      setContract(instance);
-    }
-    if (networkId == 137) {
-      setCurrency("MATIC");
-    }
   };
 
   const handleBuyListing = async () => {

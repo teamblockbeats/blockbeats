@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
 import Paper from "@material-ui/core/Paper";
@@ -7,8 +7,6 @@ import FormControl from "@material-ui/core/FormControl";
 import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 import CancelIcon from "@material-ui/icons/Cancel";
 import { Button, Typography, Box, CircularProgress } from "@material-ui/core";
-import Web3 from "web3";
-import BlockBeats from "../contracts/Blockbeats.json";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -23,59 +21,15 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Verify = () => {
-  const classes = useStyles();
-
-  const [account, setAccount] = useState(null);
-  const [contract, setContract] = useState(null);
-
+const Verify = ({ account, contract }) => {
   const [user, setUser] = useState(null);
   const [listingIDField, setlistingIDField] = useState(null);
-
   const [checkedUser, setCheckedUser] = useState("");
   const [checkedListing, setCheckedListing] = useState("");
-  const [verified, setVerified] = useState(null); // type: Boolean?
-
+  const [verified, setVerified] = useState(null);
   const [loading, setLoading] = useState(false);
 
-  /******************* BOOTSTRAPPING *****************/
-  useEffect(() => {
-    if (!window.web3) {
-    } else {
-      loadWeb3();
-      loadBlockChainData();
-    }
-  }, []);
-
-  const loadWeb3 = async () => {
-    if (window.ethereum) {
-      window.web3 = new Web3(window.ethereum);
-      await window.ethereum.enable();
-    } else if (window.web3) {
-      window.web3 = new Web3(window.web3.currentProvider);
-    }
-  };
-
-  const loadBlockChainData = async () => {
-    const web3 = window.web3;
-
-    // Use web3 to get the user's accounts.
-    const accounts = await web3.eth.getAccounts();
-    setAccount(accounts[0]);
-
-    // Check correct network
-    const networkId = await web3.eth.net.getId();
-    if (networkId !== 5777 && networkId !== 4  && networkId !== 137) {
-    } else {
-      const deployedNetwork = BlockBeats.networks[networkId];
-      const instance = new web3.eth.Contract(
-        BlockBeats.abi,
-        deployedNetwork.address
-      );
-      setContract(instance);
-    }
-  };
-  /******************************************************/
+  const classes = useStyles();
 
   const concatAddress = (totalLength, addr) => {
     let x = (totalLength - 3) / 2;
@@ -100,7 +54,7 @@ const Verify = () => {
       console.log("listing[id]");
       console.log(listing["id"]);
 
-      if (listing["id"] == listingID) {
+      if (listing["id"] === listingID) {
         return true;
       }
     }

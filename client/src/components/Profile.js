@@ -75,7 +75,7 @@ const Profile = ({ accounts, contract, currency }) => {
           name: listing["title"],
           price: listing["price"],
           URI: listing["URI"],
-          creator: listing["creator"]
+          creator: listing["creator"],
         });
       }
     }
@@ -101,7 +101,7 @@ const Profile = ({ accounts, contract, currency }) => {
         name: license["title"],
         price: license["price"],
         URI: license["URI"],
-        creator: license["creator"]
+        creator: license["creator"],
       });
     }
 
@@ -132,8 +132,7 @@ const Profile = ({ accounts, contract, currency }) => {
         button
         onClick={() => {
           handleClickOpen(creation);
-        }}
-      >
+        }}>
         <Grid container direction="row">
           {tokenColumn}
           <Grid item xs={xsSize}>
@@ -181,8 +180,7 @@ const Profile = ({ accounts, contract, currency }) => {
           className={classes.subList}
           in={open}
           timeout="auto"
-          unmountOnExit
-        >
+          unmountOnExit>
           <List>
             {items &&
               items.map((item) => {
@@ -263,8 +261,7 @@ const Profile = ({ accounts, contract, currency }) => {
                 key={index}
                 label={attr.value}
                 variant="outlined"
-                size="small"
-              ></Chip>
+                size="small"></Chip>
             ))}
           <Typography color="primary">
             {currListing.price / 1000000000000000000} {currency}
@@ -276,15 +273,14 @@ const Profile = ({ accounts, contract, currency }) => {
 
   return (
     <Grid container justify="center" direction="row" spacing={3}>
-    {drawDialogue()}
+      {drawDialogue()}
       <Grid item xs={12} md={9}>
         <Paper elevation={3} className={classes.paper}>
           <Typography className={classes.paperTitle}>Account</Typography>
 
           <ListComponent
             title="Your Creations"
-            items={creations}
-          ></ListComponent>
+            items={creations}></ListComponent>
           <ListComponent title="Your Licenses" items={licenses}></ListComponent>
         </Paper>
       </Grid>

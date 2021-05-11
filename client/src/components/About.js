@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
 import Paper from "@material-ui/core/Paper";
@@ -57,8 +57,7 @@ const About = () => {
 
           <Typography
             variant="h6"
-            style={{ marginTop: 75, marginBottom: 10, textAlign: "center" }}
-          >
+            style={{ marginTop: 75, marginBottom: 10, textAlign: "center" }}>
             Links
           </Typography>
           <Grid justify="center" container direction="row">
@@ -67,15 +66,13 @@ const About = () => {
               xs={3}
               justify="center"
               direction="column"
-              alignItems="center"
-            >
+              alignItems="center">
               <IconButton
                 onClick={() => {
                   window.location.href =
                     "https://explorer-mainnet.maticvigil.com/address/0x97c73dB41BFbF2B8c3d1Ea2f3C1193ae429a9226/transactions";
                 }}
-                color="primary"
-              >
+                color="primary">
                 <ReceiptIcon />
               </IconButton>
               <Typography style={{ textAlign: "center" }}>MATIC</Typography>
@@ -85,15 +82,12 @@ const About = () => {
               xs={3}
               justify="center"
               direction="column"
-              alignItems="center"
-            >
+              alignItems="center">
               <IconButton
                 onClick={() => {
-                  window.location.href =
-                    "https://matic.opensea.io";
+                  window.location.href = "https://matic.opensea.io";
                 }}
-                color="primary"
-              >
+                color="primary">
                 <DirectionsBoatIcon />
               </IconButton>
               <Typography style={{ textAlign: "center" }}>
@@ -105,15 +99,13 @@ const About = () => {
               xs={3}
               justify="center"
               direction="column"
-              alignItems="center"
-            >
+              alignItems="center">
               <IconButton
                 onClick={() => {
                   window.location.href =
                     "https://rinkeby.etherscan.io/address/0x799dfa2c0f28f566a70be10ad3b4227348743190";
                 }}
-                color="secondary"
-              >
+                color="secondary">
                 <ReceiptIcon />
               </IconButton>
               <Typography style={{ textAlign: "center" }}>Rinkeby</Typography>
@@ -123,15 +115,13 @@ const About = () => {
               xs={3}
               justify="center"
               direction="column"
-              alignItems="center"
-            >
+              alignItems="center">
               <IconButton
                 onClick={() => {
                   window.location.href =
                     "https://testnets.opensea.io/collection/blockbeats";
                 }}
-                color="secondary"
-              >
+                color="secondary">
                 <DirectionsBoatIcon />
               </IconButton>
 

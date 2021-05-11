@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import { Box, Typography } from "@material-ui/core";
+import { Box, Typography, Button, AppBar, Toolbar } from "@material-ui/core";
+import AccountCircleIcon from "@material-ui/icons/AccountCircle";
+import LibraryMusicIcon from "@material-ui/icons/LibraryMusic";
 import Profile from "./components/Profile";
-import { Switch, Route } from "react-router-dom";
-import Header from "./components/Header";
+import { Switch, Route, NavLink, Link } from "react-router-dom";
 import Upload from "./components/Upload";
 import Listings from "./components/Listings";
 import Verify from "./components/Verify";
@@ -11,50 +12,78 @@ import About from "./components/About";
 import BlockBeats from "./contracts/Blockbeats.json";
 import Web3 from "web3";
 
+const ACCEPTED_NETWORKS = [5777, 4, 137];
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
   },
+  title: {
+    flexGrow: 1,
+  },
+  logo: {
+    marginRight: theme.spacing(2),
+  },
+  accountIcon: {
+    marginLeft: theme.spacing(2),
+  },
+  addressButton: {
+    background: "linear-gradient(90deg, #DE4278 30%, #42DEA8 90%)",
+    color: "white",
+  },
+  addressText: {
+    width: "100px",
+    overflow: "hidden",
+    whiteSpace: "nowrap",
+    textOverflow: "ellipsis",
+  },
+  menu: {
+    marginRight: theme.spacing(2),
+    marginLeft: theme.spacing(2),
+  },
 }));
 
 const App = () => {
-  const [account, setAccount] = useState(null);
-  const [invalidNetwork, setInvalidNetWork] = useState(false);
+  const [connected, setConnected] = useState(false);
+  const [status, setStatus] = useState("");
+  const [account, setAccount] = useState("");
   const [contract, setContract] = useState(null);
   const [currency, setCurrency] = useState("ETH");
 
   const classes = useStyles();
 
   useEffect(() => {
-    if (!window.web3) {
-    } else {
+    if (window.ethereum) {
       loadWeb3();
-      loadBlockChainData();
+      loadBlockchainData();
+    } else {
+      setConnected(false);
+      setStatus(
+        "🦊 You must install Metamask in your browser: https://metamask.io/download.html"
+      );
     }
-  });
+  }, []);
 
   const loadWeb3 = async () => {
     if (window.ethereum) {
       window.web3 = new Web3(window.ethereum);
       await window.ethereum.enable();
+      setConnected(true);
     } else if (window.web3) {
       window.web3 = new Web3(window.web3.currentProvider);
-    } else {
-      setInvalidNetWork(true);
+      setConnected(true);
     }
   };
 
-  const loadBlockChainData = async () => {
+  const loadBlockchainData = async () => {
     const web3 = window.web3;
 
-    // Use web3 to get the user's accounts.
     const accounts = await web3.eth.getAccounts();
     setAccount(accounts[0]);
 
-    // Check correct network
     const networkId = await web3.eth.net.getId();
-    if (networkId !== 5777 && networkId !== 4 && networkId !== 137) {
-      setInvalidNetWork(true);
+    if (!ACCEPTED_NETWORKS.includes(networkId)) {
+      setConnected(false);
+      setStatus("🦊  Please switch to the MATIC or Rinkeby Network");
     } else {
       const deployedNetwork = BlockBeats.networks[networkId];
       const instance = new web3.eth.Contract(
@@ -63,34 +92,79 @@ const App = () => {
       );
       setContract(instance);
     }
-    if (networkId == 137) {
+    if (networkId === 137) {
       setCurrency("MATIC");
     }
   };
 
-  if (invalidNetwork) {
+  if (!connected) {
     return (
-      <div>
-        <Header account={account} />
-        <Switch>
-          <Route path="/about">
-            <About />
-          </Route>
-          <Route path="/">
-            <Box display="flex">
-              <Typography style={{ margin: "auto" }} variant="h5">
-                Please switch to MATIC or Rinkeby Network
-              </Typography>
+      <Box className={classes.root}>
+        <AppBar position="sticky" color="inherit">
+          <Toolbar>
+            <NavLink
+              to="/"
+              style={{ textDecoration: "none", color: "inherit" }}>
+              <LibraryMusicIcon fontSize="large" className={classes.logo} />
+            </NavLink>
+            <Typography variant="h5" className={classes.title}>
+              BlockBeats
+            </Typography>
+            <Box className={classes.menu}>
+              <Button component={Link} to="/about">
+                About
+              </Button>
             </Box>
-          </Route>
-        </Switch>
-      </div>
+          </Toolbar>
+        </AppBar>
+        <Route path="/about">
+          <About />
+        </Route>
+        <Route exact path="/">
+          <Box style={{ textAlign: "center" }}>
+            <Typography variant="h4">{status}</Typography>
+          </Box>
+        </Route>
+      </Box>
     );
   }
 
   return (
     <Box className={classes.root}>
-      <Header account={account} />
+      <AppBar position="sticky" color="inherit">
+        <Toolbar>
+          <NavLink to="/" style={{ textDecoration: "none", color: "inherit" }}>
+            <LibraryMusicIcon fontSize="large" className={classes.logo} />
+          </NavLink>
+          <Typography variant="h5" className={classes.title}>
+            BlockBeats
+          </Typography>
+          <Box className={classes.menu}>
+            <Button component={Link} to="/">
+              Browse
+            </Button>
+            <Button component={Link} to="/upload">
+              Upload
+            </Button>
+            <Button component={Link} to="/verify">
+              Verify
+            </Button>
+            <Button component={Link} to="/about">
+              About
+            </Button>
+          </Box>
+          <Button
+            component={Link}
+            to={{ pathname: `/profile` }}
+            className={classes.addressButton}>
+            <Box className={classes.addressText}>{account}</Box>
+            <AccountCircleIcon
+              fontSize="large"
+              className={classes.accountIcon}
+            />
+          </Button>
+        </Toolbar>
+      </AppBar>
       <Switch>
         <Route path="/upload">
           <Upload />
@@ -99,13 +173,13 @@ const App = () => {
           <Profile contract={contract} account={account} currency={currency} />
         </Route>
         <Route path="/verify">
-          <Verify />
+          <Verify contract={contract} account={account} />
         </Route>
         <Route path="/about">
           <About />
         </Route>
         <Route exact path="/">
-          <Listings />
+          <Listings contract={contract} account={account} currency={currency} />
         </Route>
       </Switch>
     </Box>
