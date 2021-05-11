@@ -127,6 +127,7 @@ const Listings = ({ contract, account, currency }) => {
             <Box>
               <img
                 src={currListing.image}
+                alt=""
                 height="100"
                 style={{
                   border: "2px solid #42DEA8",

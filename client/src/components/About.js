@@ -1,10 +1,8 @@
 import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import Grid from "@material-ui/core/Grid";
-import Paper from "@material-ui/core/Paper";
+import { Box, Grid, Paper, Typography, IconButton } from "@material-ui/core";
 import ReceiptIcon from "@material-ui/icons/Receipt";
 import DirectionsBoatIcon from "@material-ui/icons/DirectionsBoat";
-import { Typography, IconButton } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -17,14 +15,19 @@ const useStyles = makeStyles((theme) => ({
     paddingBottom: "15px",
     variant: "h5",
   },
+  root: {
+    maxWidth: "1200px",
+    marginLeft: "auto",
+    marginRight: "auto",
+  },
 }));
 
 const About = () => {
   const classes = useStyles();
 
   return (
-    <Grid container justify="center" direction="row" spacing={3}>
-      <Grid item xs={12} md={9}>
+    <Box>
+      <Box className={classes.root}>
         <Paper elevation={3} className={classes.paper}>
           <Typography className={classes.paperTitle}>
             Welcome to BlockBeats!
@@ -131,8 +134,8 @@ const About = () => {
             </Grid>
           </Grid>
         </Paper>
-      </Grid>
-    </Grid>
+      </Box>
+    </Box>
   );
 };
 

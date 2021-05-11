@@ -83,7 +83,7 @@ const ContractPlayground = () => {
 
     // Check correct network
     const networkId = await web3.eth.net.getId();
-    if (networkId !== 5777 && networkId !== 4  && networkId !== 137) {
+    if (networkId !== 5777 && networkId !== 4 && networkId !== 137) {
       setInvalidNetWork(true);
       setLoading(false);
     } else {
@@ -134,19 +134,15 @@ const ContractPlayground = () => {
   };
 
   const handleCreateListing = async () => {
-    console.log("create listing");
     let result = await contract.methods
       .createListing(title, price, URI)
       .send({ from: account });
-    console.log(result);
   };
   /******************************************************/
 
   /****************** VIEW LISTINGS *********************/
   const handleViewListings = async () => {
-    console.log("view listings");
     const listingsRet = await contract.methods.viewListings().call();
-    console.log(listingsRet);
     setListings(listingsRet);
   };
   /******************************************************/
@@ -157,7 +153,6 @@ const ContractPlayground = () => {
   };
 
   const handleBuyListing = async () => {
-    console.log("buy listing " + buyingID.toString());
     let listingPrice = getPriceOfListing(buyingID);
     await contract.methods
       .buyListing(buyingID)
@@ -175,13 +170,11 @@ const ContractPlayground = () => {
   /************** VIEW LICENSES *******************/
 
   const handleGetLicenses = async () => {
-    console.log("get license");
     let tokenIds = await contract.methods
       .tokensAtAddress(account)
       .call({ from: account });
     let licenses = [];
     for (const tokenId of tokenIds) {
-      console.log(tokenId);
       let license = await contract.methods
         .resolveTokenToListing(tokenId)
         .call({ from: account });
@@ -203,17 +196,14 @@ const ContractPlayground = () => {
   };
 
   const handleIPFSMusicFileChange = (e) => {
-    console.log(e.target.files);
     setMusicFileToPin(e.target.files[0]);
   };
 
   const handleIPFSImageFileChange = (e) => {
-    console.log(e.target.files);
     setImageFileToPin(e.target.files[0]);
   };
 
   const onUploadSuccess = (ipfsUrl) => {
-    console.log("uploadsuccess");
     setlistingIPFSUrlResult(ipfsUrl);
     setUploadPending(false);
   };

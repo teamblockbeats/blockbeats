@@ -19,6 +19,11 @@ const useStyles = makeStyles((theme) => ({
     paddingBottom: "15px",
     variant: "h5",
   },
+  root: {
+    maxWidth: "1200px",
+    marginLeft: "auto",
+    marginRight: "auto",
+  },
 }));
 
 const Verify = ({ account, contract }) => {
@@ -46,13 +51,9 @@ const Verify = ({ account, contract }) => {
       .call({ from: account });
 
     for (const tokenId of tokenIds) {
-      console.log(tokenId);
       let listing = await contract.methods
         .resolveTokenToListing(tokenId)
         .call({ from: account });
-
-      console.log("listing[id]");
-      console.log(listing["id"]);
 
       if (listing["id"] === listingID) {
         return true;
@@ -63,9 +64,6 @@ const Verify = ({ account, contract }) => {
   };
 
   const handleVerify = async () => {
-    console.log("verify");
-    console.log(Number(listingIDField));
-    console.log(user);
     setLoading(true);
     setVerified(
       (await addrOwnsListing(user, Number(listingIDField))).valueOf()
@@ -80,12 +78,12 @@ const Verify = ({ account, contract }) => {
     return (
       <FormControl fullWidth style={{ marginBottom: 12 }}>
         <TextField
-          placeholder="Enter User's Address..."
+          placeholder="Enter User's Address"
           variant="outlined"
           onChange={(e) => setUser(e.target.value)}
         />
         <TextField
-          placeholder="Enter Unique Listing ID..."
+          placeholder="Enter Unique Listing ID"
           variant="outlined"
           onChange={(e) => setlistingIDField(e.target.value)}
         />
@@ -139,8 +137,8 @@ const Verify = ({ account, contract }) => {
   };
 
   return (
-    <Grid container justify="center" direction="row" spacing={3}>
-      <Grid item xs={12} md={9}>
+    <Box>
+      <Box className={classes.root}>
         <Paper elevation={3} className={classes.paper}>
           <Typography className={classes.paperTitle}>
             Verify License Ownership
@@ -156,8 +154,8 @@ const Verify = ({ account, contract }) => {
           </Button>
           {drawVerified()}
         </Paper>
-      </Grid>
-    </Grid>
+      </Box>
+    </Box>
   );
 };
 

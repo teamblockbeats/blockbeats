@@ -14,7 +14,6 @@ import {
   Dialog,
   DialogContent,
   DialogActions,
-  Button,
   Chip,
 } from "@material-ui/core";
 import ReactAudioPlayer from "react-audio-player";
@@ -34,30 +33,25 @@ const useStyles = makeStyles((theme) => ({
   list: {
     borderBottom: "1px solid white",
   },
+  root: {
+    maxWidth: "1200px",
+    marginLeft: "auto",
+    marginRight: "auto",
+  },
 }));
 
-const Profile = ({ accounts, contract, currency }) => {
-  const classes = useStyles();
-
-  const [account, setAccount] = useState(null);
-
+const Profile = ({ contract, account, currency }) => {
   const [creations, setCreations] = useState([]);
   const [licenses, setLicenses] = useState([]);
-
   const [currListing, setCurrListing] = useState({});
   const [popupOpen, setPopupOpen] = useState(false);
+
+  const classes = useStyles();
 
   const rootIPFSGateway = "https://ipfs.io/ipfs/";
 
   useEffect(() => {
-    if (accounts !== null) {
-      setAccount(accounts[0]);
-    }
-  }, [accounts]);
-
-  useEffect(() => {
     if (contract !== null && account !== null) {
-      console.log("loading account creations");
       loadCreations();
       loadLicenses();
     }
@@ -65,11 +59,10 @@ const Profile = ({ accounts, contract, currency }) => {
 
   const loadCreations = async () => {
     const allListings = await contract.methods.viewListings().call();
-    console.log(allListings);
 
     var myListings = [];
     for (const listing of allListings) {
-      if (listing["creator"] == account) {
+      if (listing["creator"] === account) {
         myListings.push({
           id: listing["id"],
           name: listing["title"],
@@ -83,14 +76,12 @@ const Profile = ({ accounts, contract, currency }) => {
   };
 
   const loadLicenses = async () => {
-    console.log("get license");
     let tokenIds = await contract.methods
       .tokensAtAddress(account)
       .call({ from: account });
     let licenses = [];
 
     for (const tokenId of tokenIds) {
-      console.log(tokenId);
       let license = await contract.methods
         .resolveTokenToListing(tokenId)
         .call({ from: account });
@@ -183,8 +174,8 @@ const Profile = ({ accounts, contract, currency }) => {
           unmountOnExit>
           <List>
             {items &&
-              items.map((item) => {
-                return <ItemComponent creation={item} />;
+              items.map((item, index) => {
+                return <ItemComponent key={index} creation={item} />;
               })}
           </List>
         </Collapse>
@@ -206,8 +197,6 @@ const Profile = ({ accounts, contract, currency }) => {
   };
 
   const handleClickOpen = async (item) => {
-    console.log(item);
-
     let jsonUrl = rootIPFSGateway + removePrefix(item.URI, "ipfs://");
     axios.get(jsonUrl).then(function (res) {
       setCurrListing({
@@ -233,6 +222,7 @@ const Profile = ({ accounts, contract, currency }) => {
             <Box>
               <img
                 src={currListing.image}
+                alt=""
                 height="100"
                 style={{
                   border: "2px solid #42DEA8",
@@ -272,9 +262,9 @@ const Profile = ({ accounts, contract, currency }) => {
   };
 
   return (
-    <Grid container justify="center" direction="row" spacing={3}>
+    <Box>
       {drawDialogue()}
-      <Grid item xs={12} md={9}>
+      <Box className={classes.root}>
         <Paper elevation={3} className={classes.paper}>
           <Typography className={classes.paperTitle}>Account</Typography>
 
@@ -283,8 +273,8 @@ const Profile = ({ accounts, contract, currency }) => {
             items={creations}></ListComponent>
           <ListComponent title="Your Licenses" items={licenses}></ListComponent>
         </Paper>
-      </Grid>
-    </Grid>
+      </Box>
+    </Box>
   );
 };
 

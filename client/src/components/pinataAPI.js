@@ -64,8 +64,6 @@ export const pinListingToIPFS = (
     })
     .then(function (musicResponse) {
       musicHash = musicResponse.data.IpfsHash;
-      console.log("musicHash");
-      console.log(musicHash);
 
       onStatus("Uploading Art to IPFS...");
 
@@ -80,8 +78,6 @@ export const pinListingToIPFS = (
         })
         .then(function (imageResponse) {
           imageHash = imageResponse.data.IpfsHash;
-          console.log("imageHash");
-          console.log(imageHash);
 
           onStatus("Uploading Metadata to IPFS...");
 
@@ -93,7 +89,7 @@ export const pinListingToIPFS = (
             description: description,
             animation_url: "ipfs://" + musicHash,
             image: "ipfs://" + imageHash,
-            attributes: attributesToJSON(attributes)
+            attributes: attributesToJSON(attributes),
           };
           axios
             .post(jsonUrl, JSONBody, {
@@ -106,17 +102,14 @@ export const pinListingToIPFS = (
               onSuccess("ipfs://" + response.data.IpfsHash);
             })
             .catch((error) => {
-              console.log(error)
               onStatus("Failed");
             });
         })
         .catch((error) => {
-          console.log(error)
           onStatus("Failed");
         });
     })
     .catch((error) => {
-      console.log(error)
       onStatus("Failed");
     });
 };

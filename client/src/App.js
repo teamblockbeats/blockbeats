@@ -167,7 +167,7 @@ const App = () => {
       </AppBar>
       <Switch>
         <Route path="/upload">
-          <Upload />
+          <Upload contract={contract} account={account} />
         </Route>
         <Route path="/profile">
           <Profile contract={contract} account={account} currency={currency} />

@@ -1,9 +1,5 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import Grid from "@material-ui/core/Grid";
-import Paper from "@material-ui/core/Paper";
-import TextField from "@material-ui/core/TextField";
-import FormControl from "@material-ui/core/FormControl";
 import {
   Button,
   Typography,
@@ -13,10 +9,11 @@ import {
   InputLabel,
   Select,
   MenuItem,
+  Paper,
+  TextField,
+  FormControl,
 } from "@material-ui/core";
 import { pinListingToIPFS } from "./pinataAPI";
-import Web3 from "web3";
-import BlockBeats from "../contracts/Blockbeats.json";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -27,30 +24,28 @@ const useStyles = makeStyles((theme) => ({
     textAlign: "center",
     fontSize: "1.5em",
     paddingBottom: "15px",
-    variant: "h5",
+  },
+  root: {
+    maxWidth: "1200px",
+    marginLeft: "auto",
+    marginRight: "auto",
   },
 }));
 
-const Upload = () => {
-  const classes = useStyles();
-
-  const [account, setAccount] = useState(null);
-  const [contract, setContract] = useState(null);
-
+const Upload = ({ contract, account }) => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState(0);
-
   const [genre, setGenre] = useState("");
   const [language, setLanguage] = useState("");
   const [BPM, setBPM] = useState(0);
   const [key, setKey] = useState("");
   const [trackType, setTrackType] = useState("");
-
   const [musicFile, setMusicFile] = useState(null);
   const [artFile, setArtFile] = useState(null);
-
   const [loadingStatus, setLoadingStatus] = useState(undefined);
+
+  const classes = useStyles();
 
   const keys = [
     "N/A",
@@ -103,45 +98,6 @@ const Upload = () => {
     "Vocals",
   ];
 
-  /******************* BOOTSTRAPPING *****************/
-  useEffect(() => {
-    if (!window.web3) {
-    } else {
-      loadWeb3();
-      loadBlockChainData();
-    }
-  }, []);
-
-  const loadWeb3 = async () => {
-    if (window.ethereum) {
-      window.web3 = new Web3(window.ethereum);
-      await window.ethereum.enable();
-    } else if (window.web3) {
-      window.web3 = new Web3(window.web3.currentProvider);
-    }
-  };
-
-  const loadBlockChainData = async () => {
-    const web3 = window.web3;
-
-    // Use web3 to get the user's accounts.
-    const accounts = await web3.eth.getAccounts();
-    setAccount(accounts[0]);
-
-    // Check correct network
-    const networkId = await web3.eth.net.getId();
-    if (networkId !== 5777 && networkId !== 4  && networkId !== 137) {
-    } else {
-      const deployedNetwork = BlockBeats.networks[networkId];
-      const instance = new web3.eth.Contract(
-        BlockBeats.abi,
-        deployedNetwork.address
-      );
-      setContract(instance);
-    }
-  };
-  /******************************************************/
-
   /************* HANDLERS ******************/
   const handleTitleChange = (event) => {
     setTitle(event.target.value);
@@ -175,19 +131,16 @@ const Upload = () => {
     setArtFile(event.target.files[0]);
   };
   /***************************************/
-  
+
   const onIpfsSuccess = async (ipfsURI) => {
-    console.log(ipfsURI);
     setLoadingStatus("Submitting to Smart Contract...");
     let result = await contract.methods
       .createListing(title, price.toString(), ipfsURI)
       .send({ from: account });
     setLoadingStatus("Done!");
-    console.log(result);
   };
 
   const handleCreateListing = async () => {
-    console.log("create listing");
     let apiKey = "2a7bbddb5e255f5539ee";
     let apiSecretKey =
       "e0672966a87e1a831754cc3fffb846b9d40d4a6522553a55300b2f1f6a2ca477";
@@ -217,17 +170,17 @@ const Upload = () => {
     return (
       <FormControl fullWidth style={{ marginBottom: 12 }}>
         <TextField
-          placeholder="Enter title..."
+          placeholder="Enter Title"
           variant="outlined"
           onChange={(e) => handleTitleChange(e)}
         />
         <TextField
-          placeholder="Enter Description..."
+          placeholder="Enter Description"
           variant="outlined"
           onChange={(e) => handleDescriptionChange(e)}
         />
         <TextField
-          placeholder="Enter Price (ETH)..."
+          placeholder="Enter Price (ETH or MATIC)"
           variant="outlined"
           onChange={(e) => handlePriceChange(e)}
         />
@@ -251,8 +204,10 @@ const Upload = () => {
                 onChange={(e) => {
                   setTrackType(e.target.value);
                 }}>
-                {trackTypes.map((trackType) => (
-                  <MenuItem value={trackType}>{trackType}</MenuItem>
+                {trackTypes.map((trackType, index) => (
+                  <MenuItem key={index} value={trackType}>
+                    {trackType}
+                  </MenuItem>
                 ))}
               </Select>
             </FormControl>
@@ -272,8 +227,10 @@ const Upload = () => {
                 onChange={(e) => {
                   setKey(e.target.value);
                 }}>
-                {keys.map((key) => (
-                  <MenuItem value={key}>{key}</MenuItem>
+                {keys.map((key, index) => (
+                  <MenuItem key={index} value={key}>
+                    {key}
+                  </MenuItem>
                 ))}
               </Select>
             </FormControl>
@@ -344,15 +301,13 @@ const Upload = () => {
   };
 
   return (
-    <Grid container justify="center" direction="row" spacing={3}>
-      <Grid item xs={12} md={9}>
-        <Paper elevation={3} className={classes.paper}>
-          <Typography className={classes.paperTitle}>Create Listing</Typography>
-          {drawListingInputFields()}
-          {drawUploadButton()}
-        </Paper>
-      </Grid>
-    </Grid>
+    <Box className={classes.root}>
+      <Paper elevation={3} className={classes.paper}>
+        <Typography className={classes.paperTitle}>Create Listing</Typography>
+        {drawListingInputFields()}
+        {drawUploadButton()}
+      </Paper>
+    </Box>
   );
 };
 
