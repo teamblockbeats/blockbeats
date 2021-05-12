@@ -11,4 +11,4 @@ Buyers can view and preview these listings on blockbeats and have the option of 
 | --- | --- |
 | ![contractUsageWhiteBG](https://user-images.githubusercontent.com/57472912/114683723-999d4780-9d53-11eb-9a85-11a030f6cf0a.png) | ![systemWhiteBG](https://user-images.githubusercontent.com/57472912/114684631-71faaf00-9d54-11eb-94a6-b39c1007acb5.png) |
 
-*Refer to [guides](guide.md) for set up & installation info.*
+*Refer to [dev guides](dev-guide.md) for set up & installation info for devs.*

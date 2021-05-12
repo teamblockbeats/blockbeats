@@ -1,15 +1,7 @@
 # Local Installation
 ## Node
-Firstly update **node dependencies** and **build** the project to compile the static HTML webpage:
-* `cd client`
-* `npm install`
-* `npm run build`
-
-*Note that if you're only testing UI/react changes, you can simply leave npms test server running rather than having to build and restart django to see each UI change. This is done with:* `npm start`
-
-**UPDATE: since we aren't going to be using django, atleast for now, just use above step ^**
-
-**??TODO: database migration steps??**
+* in the client directory, install node dependencies, `npm install`. 
+* to run a local version of the website, `npm start`
 
 ## Truffle
 truffle is used to compile smart contracts and run a local simulated ETH network.
@@ -17,12 +9,12 @@ truffle is used to compile smart contracts and run a local simulated ETH network
 `npm install -g truffle`
 
 ### Start the network
-`truffle develop`
+`truffle develop` in the root project directory
 
 this will return some account addresses and private keys, these can be imported into your metamask wallet if you need some simulated ETH for contract interactions.
 
 ### Configure your metamask
-Until we deploy on a real network, metamask can be configured to connect to your truffle network (required to view the site). 
+To connect your browser/metamask plugin with your local truffle network, metamask can be configured to connect to your truffle network (required to view the site). 
 
 * Click Custom RPC in your metamask networks
   * The RPC URL should be `http://localhost:8545`
@@ -45,25 +37,6 @@ A great way to test a truffle deployed contract is to use remix.ethereum.org.
 * A deployed contract should appear in the list below, expand this contract item
 * You SHOULD be able to interact with your deployed contract using this interactive interface. 
   * To interact, you probably will need some ETH (see **configure your metamask** ^)
-
-
-## Django (Irrelevant for time being)
-### First time set up
-The django is run through a python `virtual environment`.
-
-* Firstly install `virtualenv`: (`pip install virtualenv`)
-* Create your virtualenv called "venv" from the base directory: `virtualenv venv`
-
-### Running the server
-To run server first enter the virtualenv: 
-* on mac/unix: `source venv/bin/activate`
-
-If you have just pulled a new version of the project, there might be new python dependencies to install: `pip install -r requirements.txt`
-
-After you've built the node static, the local server can be ran:
-* `cd server`
-* `python manage.py runserver`
-
 
 # AWS Serverless Deployment
 Whilst the site doesn't have a need for a database (or django entirely), we can deploy to AWS - [available here](http://blockbeats.s3-website-ap-southeast-2.amazonaws.com/).
