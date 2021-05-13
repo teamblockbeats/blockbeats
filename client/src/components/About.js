@@ -106,7 +106,7 @@ const About = () => {
               <IconButton
                 onClick={() => {
                   window.location.href =
-                    "https://rinkeby.etherscan.io/address/0x799dfa2c0f28f566a70be10ad3b4227348743190";
+                    "https://rinkeby.etherscan.io/address/0xffe7b7a97fa54f6fbdd3283cd2f53b2fd7aa4f1e";
                 }}
                 color="secondary">
                 <ReceiptIcon />
@@ -122,7 +122,7 @@ const About = () => {
               <IconButton
                 onClick={() => {
                   window.location.href =
-                    "https://testnets.opensea.io/collection/blockbeats";
+                    "https://testnets.opensea.io/collection/blockbeats-v2";
                 }}
                 color="secondary">
                 <DirectionsBoatIcon />
