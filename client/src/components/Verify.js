@@ -49,13 +49,11 @@ const Verify = ({ account, contract }) => {
     let tokenIds = await contract.methods
       .tokensAtAddress(addr)
       .call({ from: account });
-
     for (const tokenId of tokenIds) {
       let listing = await contract.methods
         .resolveTokenToListing(tokenId)
         .call({ from: account });
-
-      if (listing["id"] === listingID) {
+      if (Number(listing["id"]) === listingID) {
         return true;
       }
     }
